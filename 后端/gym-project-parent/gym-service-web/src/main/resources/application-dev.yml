@@ -1,0 +1,50 @@
+# ==================== 服务器配置 ====================
+server:
+  port: 8089  # 应用服务端口号
+
+# ==================== Spring框架配置 ====================
+spring:
+  # 数据库连接配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/gymnasium?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: 123456
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 200MB      # 单个文件最大大小（SpringBoot默认为10MB）
+      max-request-size: 500MB   # 单次请求文件总大小
+      enabled: true             # 启用文件上传功能
+
+# ==================== MinIO对象存储配置 ====================
+minio:
+  endpoint: http://127.0.0.1:9000  # MinIO服务地址
+  accesskey: minioadmin            # 访问密钥
+  secretKey: minioadmin            # 秘密密钥
+
+# ==================== MyBatis Plus配置 ====================
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # SQL日志输出到控制台
+  global-config:
+    db-config:
+      update-strategy: not_empty  # 更新时只更新非空和非NULL字段
+
+# ==================== JWT认证配置 ====================
+jwt:
+  issuer: noy        # JWT令牌颁发者
+  secret: com.noy    # JWT签名密钥
+  expiration: 30     # JWT过期时间（分钟）
+
+# ==================== 安全配置 ====================
+# 不需要token验证的请求URL（逗号分隔）
+ignore:
+  url: /api/login/login,/api/login/image,/api/course/list
+
+# ==================== 日志配置 ====================
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd} [%thread] %-5level %logger- %msg%n'  # 控制台日志输出格式

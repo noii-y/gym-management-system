@@ -1,0 +1,27 @@
+{
+  // Node.js 环境 TypeScript 配置
+  "extends": "@tsconfig/node22/tsconfig.json",
+  
+  // 包含的配置文件
+  "include": [
+    "vite.config.*",      // Vite 配置文件
+    "vitest.config.*",    // Vitest 测试配置文件
+    "cypress.config.*",   // Cypress 测试配置文件
+    "nightwatch.conf.*",  // Nightwatch 测试配置文件
+    "playwright.config.*", // Playwright 测试配置文件
+    "eslint.config.*"     // ESLint 配置文件
+  ],
+  
+  // 编译选项
+  "compilerOptions": {
+    "noEmit": true,       // 不生成输出文件
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",  // 构建信息文件位置
+    
+    // 编译目标和库配置（防止报错）
+    "target": "es5",                                    // 编译目标版本
+    "lib": ["es5", "es6", "dom", "dom.iterable"],      // 包含的库文件
+    "module": "ESNext",                                 // 模块系统
+    "moduleResolution": "Bundler",                      // 模块解析策略
+    "types": ["node"]                                   // 包含的类型定义
+  }
+}

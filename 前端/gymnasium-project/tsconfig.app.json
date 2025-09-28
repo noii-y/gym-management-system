@@ -1,0 +1,26 @@
+{
+  // 应用程序 TypeScript 配置
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  
+  // 包含的文件和目录
+  "include": [
+    "env.d.ts",      // 环境类型定义
+    "src/**/*",      // src目录下所有文件
+    "src/**/*.vue"   // Vue单文件组件
+  ],
+  
+  // 排除的文件和目录
+  "exclude": [
+    "src/**/__tests__/*"  // 测试文件
+  ],
+  
+  // 编译选项
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",  // 构建信息文件位置
+    "types": ["node"],                    // 包含的类型定义
+    "verbatimModuleSyntax": true,         // 严格模块语法
+    "paths": {
+      "@/*": ["./src/*"]                  // 路径映射：@ 指向 src 目录
+    }
+  }
+}
