@@ -257,14 +257,6 @@ docker run -p 9000:9000 -p 9001:9001 \
    - MinIO分布式存储提高文件访问速度
    - 图片压缩减少存储空间
 
-## 🤝 贡献指南
-
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
-
 ## 📝 开发规范
 
 ### 前端规范
@@ -279,16 +271,8 @@ docker run -p 9000:9000 -p 9001:9001 \
 - 异常处理要完整和规范
 - 代码注释要清晰明了
 
-## 📄 许可证
-
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
-
 ## 📞 联系方式
 
 如有问题或建议，请通过以下方式联系：
-- 项目Issues: [GitHub Issues](https://github.com/noii-y/issues)
 - 邮箱: 2803038543@qq.com
 
----
-
-**注意**: 这是一个学习和演示项目，如需用于生产环境，请确保进行充分的安全测试和性能优化。
