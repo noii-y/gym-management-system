@@ -1,10 +1,20 @@
-"node_modules/" 
-"target/" 
-".idea/" 
-"*.log" 
-".DS_Store" 
-"target/" 
-".idea/" 
-"*.log" 
-".DS_Store" 
-"dist/" 
+# 依赖目录
+node_modules/
+target/
+dist/
+
+# IDE配置文件
+.idea/
+.vscode/
+
+# 日志文件
+*.log
+
+# 系统文件
+.DS_Store
+desktop.ini
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
