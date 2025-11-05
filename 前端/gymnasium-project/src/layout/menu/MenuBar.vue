@@ -62,7 +62,7 @@ console.log(menuList)
 <style scoped lang="scss">
 // 菜单展开时的宽度设置
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 230px;
+  width: 280px;
   min-height: 400px;
 }
 

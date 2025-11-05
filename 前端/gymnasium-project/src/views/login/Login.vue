@@ -181,13 +181,16 @@ const resetForm = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("../../assets/bg.png");
+  background-image: url("../../assets/WDU.jpg");
   background-size: 100% 100%;
 
   /* 登录表单样式 */
   .loginForm {
-    border-radius: 10px;
-    background-color: #fff;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.7); /* 半透明白，透出背景 */
+    backdrop-filter: blur(3px); /* 毛玻璃效果 */
+    -webkit-backdrop-filter: blur(3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); /* 柔和阴影提升层次 */
     width: 430px;
     height: 340px;
     padding: 20px 35px;

@@ -1,7 +1,7 @@
 <template>
   <el-dropdown>
     <span class="el-dropdown-link">
-      <img class="userimg" src="@/assets/user.jpg" />
+      <img class="userimg" src="@/assets/WDU.png" />
     </span>
     <template #dropdown>
       <el-dropdown-menu>

@@ -11,6 +11,7 @@ import axios, {
 } from "axios";
 import { ElMessage } from 'element-plus';
 import { userStore } from '@/store/user'
+import router from '@/router'
 
 /**
  * Axios请求基础配置
@@ -82,8 +83,24 @@ class Http {
       (res: AxiosResponse) => {
         // 成功响应处理
         if (res.data.code != 200) {
-          ElMessage.error(res.data.msg || '服务器出错!')
-          return Promise.reject(res.data.msg || '服务器出错')
+          const msg = res.data.msg || '服务器出错!'
+          ElMessage.error(msg)
+          // 针对登录态失效的统一处理：清理本地缓存并跳转登录
+          // 后端常见返回文案："token验证失败"、"未授权"、"未登录" 等
+          const tokenErrorHints = ['token', '未授权', '未登录', '登录失效', '验证失败']
+          const lowerMsg = String(msg).toLowerCase()
+          const isTokenError = tokenErrorHints.some(h => lowerMsg.includes(h.toLowerCase()))
+          if (isTokenError) {
+            const store = userStore()
+            // 清空用户信息与缓存，避免手动清浏览器缓存
+            try {
+              localStorage.clear()
+            } catch (_) {}
+            store.clearUserInfo()
+            // 跳转到登录页
+            router.push({ path: '/login' })
+          }
+          return Promise.reject(msg)
         } else {
           return res.data
         }
@@ -102,6 +119,12 @@ class Http {
             case 401:
               error.data.msg = '未授权，请重新登录';
               ElMessage.error(error.data.msg)
+              // 401 统一视为登录态失效，清理并跳转登录
+              try {
+                localStorage.clear()
+              } catch (_) {}
+              userStore().clearUserInfo()
+              router.push({ path: '/login' })
               break
             case 403:
               error.data.msg = '拒绝访问';

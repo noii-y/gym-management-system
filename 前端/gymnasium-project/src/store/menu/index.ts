@@ -203,6 +203,15 @@ export function generateRoutes(routes: RouteRecordRaw[], router: Router): RouteR
     
     // 如果存在子路由，递归处理
     if (tmp.children && tmp.children.length > 0) {
+      // 规范子路由路径：若为相对路径，则拼接父路径为绝对路径
+      tmp.children = tmp.children.map((child: any) => {
+        const childTmp = { ...child }
+        if (childTmp && typeof childTmp.path === 'string' && !childTmp.path.startsWith('/')) {
+          const parentPath = typeof tmp.path === 'string' ? tmp.path.replace(/\/$/, '') : ''
+          childTmp.path = `${parentPath}/${childTmp.path}`
+        }
+        return childTmp
+      })
       if (route.component !== 'Layout') {
         // 非布局组件使用center容器
         tmp.component = center;

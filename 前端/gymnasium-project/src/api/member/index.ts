@@ -76,5 +76,5 @@ export const rechargeApi = (param: Recharge) => {
  * @returns Promise 充值记录列表
  */
 export const getMyRechargeApi = (param: any) => {
-  return http.get("/api/member/myRecharge", param)
+  return http.get("/api/member/getMyRecharge", param)
 }
