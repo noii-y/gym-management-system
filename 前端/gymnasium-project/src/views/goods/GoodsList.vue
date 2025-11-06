@@ -4,17 +4,17 @@
   支持按商品名称搜索，分页显示商品数据
 -->
 <template>
-    <el-main>
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
         <!-- 搜索栏 -->
-        <el-form :model="listParam" :inline="true" size="default">
+        <el-form :model="listParam" :inline="true" size="default" ref="formRef">
             <el-form-item>
                 <el-input v-model="listParam.name" placeholder="请输入商品名称" />
             </el-form-item>
 
             <el-form-item>
                 <el-button :icon="Search" @click="searchBtn">搜索</el-button>
-                <el-button :icon="Close" type="danger" plain @click="resetBtn">
-                    重置
+                <el-button :icon="Close" type="danger" plain @click="handleReset">
+                    重置查询条件
                 </el-button>
                 <el-button v-permission="['sys:goodsList:add']" :icon="Plus" type="primary" @click="addBtn">
                     新增
@@ -23,7 +23,7 @@
         </el-form>
 
         <!-- 商品数据表格 -->
-        <el-table :data="tableData.list" :height="tableHeight" border stripe>
+        <el-table :data="tableData.list" :height="tableHeight" border stripe ref="tableRef">
             <el-table-column prop="image" label="商品图片" width="90" align="center">
                 <template #default="scope">
                     <el-image style="width: 60px; height: 60px; border-radius: 50%" :src="scope.row.image" />
@@ -54,7 +54,7 @@
 
         <!-- 新增/编辑商品弹窗 -->
         <AddGoods ref="addRef" @reFresh="reFresh" />
-    </el-main>
+
 </template>
 
 <script setup lang="ts">
@@ -62,6 +62,7 @@
  * 商品管理页面逻辑
  * 使用组合式API管理商品列表的查询、操作和状态
  */
+import { ref } from 'vue'
 import { Plus, Edit, Delete, Search, Close } from '@element-plus/icons-vue';
 import AddGoods from './AddGoods.vue';
 import useTable from '@/composables/goods/useTable';
@@ -87,6 +88,17 @@ const {
     deleteBtn,
     addRef,
 } = useGoods(getList);
+
+// 更完整的重置查询条件包装
+const formRef = ref<any>(null)
+const tableRef = ref<any>(null)
+const handleReset = () => {
+  listParam.currentPage = 1
+  formRef.value?.resetFields?.()
+  tableRef.value?.clearSort?.()
+  tableRef.value?.clearSelection?.()
+  resetBtn()
+}
 </script>
 
 <style scoped></style>

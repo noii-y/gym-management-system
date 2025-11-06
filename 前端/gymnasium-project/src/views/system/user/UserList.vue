@@ -4,9 +4,9 @@
   支持按电话和姓名搜索，分页显示用户数据
 -->
 <template>
-  <el-main>
+  <!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
     <!-- 搜索栏 -->
-    <el-form :model="listParam" :inline="true" size="default">
+    <el-form :model="listParam" :inline="true" size="default" ref="formRef">
       <el-form-item>
         <el-input v-model="listParam.phone" placeholder="请输入电话"></el-input>
       </el-form-item>
@@ -15,13 +15,13 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="searchBtn" :icon="Search">搜索</el-button>
-        <el-button @click="resetBtn" type="danger" plain :icon="Close">重置</el-button>
+          <el-button @click="handleReset" type="danger" plain :icon="Close">重置查询条件</el-button>
         <el-button v-permission="['sys:user:add']" type="primary" @click="addBtn" :icon="Plus">新增</el-button>
       </el-form-item>
     </el-form>
     
     <!-- 用户数据表格 -->
-    <el-table :height="tableHeight" :data="tableList.list" border stripe>
+    <el-table :height="tableHeight" :data="tableList.list" border stripe ref="tableRef">
       <el-table-column prop="nickName" label="姓名"></el-table-column>
       <el-table-column prop="username" label="登录账户"></el-table-column>
       <el-table-column prop="sex" label="性别">
@@ -66,7 +66,7 @@
     
     <!-- 新增、编辑用户弹框 -->
     <add-user ref="addRef" @refresh="refresh"></add-user>
-  </el-main>
+  
 </template>
 
 <script setup lang="ts">
@@ -78,12 +78,26 @@ import AddUser from "./AddUser.vue";
 import { Plus, Edit, Delete, Search, Close } from "@element-plus/icons-vue";
 import useTable from "@/composables/user/useTable";
 import useUser from "@/composables/user/useUser";
+import { ref } from "vue";
 
 // 表格相关功能：查询参数、数据获取、搜索、重置、分页等
 const { listParam, getList, searchBtn, resetBtn, tableList, sizeChange, currentChange, tableHeight, refresh } = useTable();
 
 // 用户操作功能：新增、编辑、删除、重置密码
 const { addBtn, editBtn, deleteBtn, resetPasBtn, addRef } = useUser(getList);
+
+// 引用表单和表格
+const formRef = ref<any>(null);
+const tableRef = ref<any>(null);
+
+// 更完整的重置逻辑
+const handleReset = () => {
+  listParam.currentPage = 1;
+  formRef.value?.resetFields?.();
+  tableRef.value?.clearSort?.();
+  tableRef.value?.clearSelection?.();
+  resetBtn();
+};
 </script>
 
 <style scoped></style>

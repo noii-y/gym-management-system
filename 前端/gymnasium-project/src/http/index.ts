@@ -6,8 +6,8 @@ import axios, {
   type AxiosInstance, 
   type AxiosRequestConfig, 
   type AxiosResponse, 
-  type AxiosRequestHeaders, 
-  type InternalAxiosRequestConfig 
+  type InternalAxiosRequestConfig,
+  type RawAxiosRequestHeaders
 } from "axios";
 import { ElMessage } from 'element-plus';
 import { userStore } from '@/store/user'
@@ -31,6 +31,15 @@ export interface Result<T = any> {
   code: number;    // 响应状态码
   msg: string;     // 响应消息
   data: T;         // 响应数据
+}
+
+/**
+ * 请求可选项
+ * noAuth: 为 true 时该请求不携带 token
+ */
+// 注册模块暂未启用：保留类型以兼容现有 API 引用，但当前不使用
+export interface RequestOptions {
+  // noAuth?: boolean // 已移除：不再注入 X-No-Auth 头或特殊处理
 }
 
 /**
@@ -62,12 +71,11 @@ class Http {
         const store = userStore()
         const token = store.getToken;
         
-        // 如果token存在，添加到请求头
+        // 统一在存在 token 时添加到请求头
         if (token) {
           config.headers!['token'] = token
         }
         
-        console.log('请求配置:', config)
         return config;
       }, 
       (error: any) => {
@@ -83,24 +91,25 @@ class Http {
       (res: AxiosResponse) => {
         // 成功响应处理
         if (res.data.code != 200) {
-          const msg = res.data.msg || '服务器出错!'
-          ElMessage.error(msg)
-          // 针对登录态失效的统一处理：清理本地缓存并跳转登录
-          // 后端常见返回文案："token验证失败"、"未授权"、"未登录" 等
-          const tokenErrorHints = ['token', '未授权', '未登录', '登录失效', '验证失败']
-          const lowerMsg = String(msg).toLowerCase()
+          const msgRaw = res.data?.msg ?? '服务器出错!'
+          const lowerMsg = String(msgRaw).toLowerCase()
+          // 将“token验证失败”替换为更加友好的提示
+          const adjustedMsg = String(msgRaw).includes('token验证失败') ? '验证过期请重新登陆' : String(msgRaw)
+          // 统一识别登录态失效相关文案
+          const tokenErrorHints = ['token验证失败', '未授权', '未登录', '登录失效', '验证失败']
           const isTokenError = tokenErrorHints.some(h => lowerMsg.includes(h.toLowerCase()))
+
           if (isTokenError) {
-            const store = userStore()
-            // 清空用户信息与缓存，避免手动清浏览器缓存
-            try {
-              localStorage.clear()
-            } catch (_) {}
-            store.clearUserInfo()
-            // 跳转到登录页
+            // 清理并跳转登录页，重新获取授权
+            try { localStorage.clear() } catch (_) {}
+            userStore().clearUserInfo()
             router.push({ path: '/login' })
+            ElMessage.error(adjustedMsg)
+            return Promise.reject(adjustedMsg)
+          } else {
+            ElMessage.error(adjustedMsg)
+            return Promise.reject(adjustedMsg)
           }
-          return Promise.reject(msg)
         } else {
           return res.data
         }
@@ -120,9 +129,7 @@ class Http {
               error.data.msg = '未授权，请重新登录';
               ElMessage.error(error.data.msg)
               // 401 统一视为登录态失效，清理并跳转登录
-              try {
-                localStorage.clear()
-              } catch (_) {}
+              try { localStorage.clear() } catch (_) {}
               userStore().clearUserInfo()
               router.push({ path: '/login' })
               break
@@ -188,7 +195,8 @@ class Http {
    * @param params 查询参数
    * @returns Promise<T>
    */
-  get<T = Result>(url: string, params?: object): Promise<T> {
+  get<T = Result>(url: string, params?: object, options?: RequestOptions): Promise<T> {
+    // options 暂不使用
     return this.instance.get(url, { params })
   }
   
@@ -198,7 +206,8 @@ class Http {
    * @param data 请求体数据
    * @returns Promise<T>
    */
-  post<T = Result>(url: string, data?: object): Promise<T> {
+  post<T = Result>(url: string, data?: object, options?: RequestOptions): Promise<T> {
+    // options 暂不使用
     return this.instance.post(url, data)
   }
   
@@ -208,7 +217,8 @@ class Http {
    * @param data 请求体数据
    * @returns Promise<T>
    */
-  put<T = Result>(url: string, data?: object): Promise<T> {
+  put<T = Result>(url: string, data?: object, options?: RequestOptions): Promise<T> {
+    // options 暂不使用
     return this.instance.put(url, data)
   }
   
@@ -217,7 +227,8 @@ class Http {
    * @param url 请求地址
    * @returns Promise<T>
    */
-  delete<T = Result>(url: string): Promise<T> {
+  delete<T = Result>(url: string, options?: RequestOptions): Promise<T> {
+    // options 暂不使用
     return this.instance.delete(url)
   }
   
@@ -227,12 +238,11 @@ class Http {
    * @param params 文件数据
    * @returns Promise<T>
    */
-  upload<T = Result>(url: string, params?: object): Promise<T> {
-    return this.instance.post(url, params, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  upload<T = Result>(url: string, params?: object, options?: RequestOptions): Promise<T> {
+    const headers: RawAxiosRequestHeaders = {
+      'Content-Type': 'multipart/form-data'
+    }
+    return this.instance.post(url, params, { headers })
   }
 }
 

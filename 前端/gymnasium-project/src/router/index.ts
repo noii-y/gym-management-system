@@ -16,6 +16,12 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     component: () => import('@/views/login/Login.vue'),
     name: "login"
   },
+  // 注册页面先注释
+  // {
+  //   path: "/register",
+  //   component: () => import('@/views/login/Register.vue'),
+  //   name: "register"
+  // },
   
   // 主页面布局路由
   {

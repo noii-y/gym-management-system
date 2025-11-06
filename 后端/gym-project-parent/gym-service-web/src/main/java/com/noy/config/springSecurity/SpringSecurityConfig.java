@@ -73,10 +73,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         
         // 关闭跨域请求伪造保护
         http.csrf().disable().authorizeRequests()
-                // 放行登录、验证码请求，其他的所有请求都要认证
-                .antMatchers("/api/login/login", "/api/login/image", "/api/login/getMenuList", 
-                           "/api/login/getInfo", "/api/home/getTotal", "/api/home/getHotCourse", 
-                           "/api/home/getHotGoods", "/api/home/getHotCards", "/api/course/list").permitAll()
+                // 放行登录、验证码、首页统计、课程列表以及开放注册接口
+                .antMatchers(
+                        "/api/login/login", 
+                        "/api/login/image", 
+                        "/api/login/getMenuList", 
+                        "/api/login/getInfo", 
+                        "/api/home/getTotal", 
+                        "/api/home/getHotCourse", 
+                        "/api/home/getHotGoods", 
+                        "/api/home/getHotCards", 
+                        "/api/course/list",
+                        "/api/member",
+                        "/api/user",
+                        "/api/role/getSelect"
+                ).permitAll()
                 // 其他的任何接口访问都需要认证
                 .anyRequest().authenticated()
                 .and().exceptionHandling()

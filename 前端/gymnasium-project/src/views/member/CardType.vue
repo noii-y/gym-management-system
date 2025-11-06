@@ -1,9 +1,9 @@
 <!-- 会员卡类型管理页面 -->
 <!-- 提供会员卡类型的查询、新增、编辑、删除功能 -->
 <template>
-  <el-main>
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
       <!-- 搜索栏：提供标题搜索和操作按钮 -->
-      <el-form :model="listParam" :inline="true" size="default">
+      <el-form :model="listParam" :inline="true" size="default" ref="formRef">
           <el-form-item>
               <!-- 标题搜索输入框 -->
               <el-input v-model="listParam.title" placeholder="请输入标题"></el-input>
@@ -12,7 +12,7 @@
               <!-- 搜索按钮 -->
               <el-button :icon="Search" @click="searchBtn">搜索</el-button>
               <!-- 重置搜索条件按钮 -->
-              <el-button :icon="Close" type="danger" plain @click="resetBtn">重置</el-button>
+              <el-button :icon="Close" type="danger" plain @click="handleReset">重置查询条件</el-button>
               <!-- 新增会员卡类型按钮（需要权限） -->
               <el-button
                   v-permission="['sys:memberRoot:add']"
@@ -25,7 +25,7 @@
       </el-form>
       
       <!-- 会员卡类型数据表格 -->
-      <el-table :height="tableHeight" :data="tableList.list" border stripe>
+      <el-table :height="tableHeight" :data="tableList.list" border stripe ref="tableRef">
           <!-- 卡类型标题列 -->
           <el-table-column prop="title" label="标题"></el-table-column>
           <!-- 卡类型列：显示不同类型的标签 -->
@@ -88,7 +88,7 @@
       
       <!-- 新增/编辑对话框组件 -->
       <AddCard ref="addRef" @refresh="refresh"></AddCard>
-  </el-main>
+
 </template>
 
 <script setup lang="ts">
@@ -100,6 +100,7 @@ import AddCard from "./AddCard.vue";
 import { Plus, Edit, Delete, Search, Close } from "@element-plus/icons-vue";
 import useMemberTable from "@/composables/member_card/useMemberTable";
 import useMember from "@/composables/member_card/useMember";
+import { ref } from "vue";
 
 /**
  * 表格相关操作和数据
@@ -122,6 +123,19 @@ const {
  * 包含新增、编辑、删除等操作
  */
 const { addBtn, editBtn, deleteBtn, addRef } = useMember(getList);
+
+// 引用表单和表格
+const formRef = ref<any>(null);
+const tableRef = ref<any>(null);
+
+// 更完整的重置逻辑
+const handleReset = () => {
+  listParam.currentPage = 1;
+  formRef.value?.resetFields?.();
+  tableRef.value?.clearSort?.();
+  tableRef.value?.clearSelection?.();
+  resetBtn();
+};
 </script>
 
 <style scoped></style>

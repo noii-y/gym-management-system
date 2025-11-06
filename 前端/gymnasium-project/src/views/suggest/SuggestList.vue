@@ -1,8 +1,8 @@
 <!-- 意见反馈管理页面组件 -->
 <template>
-    <el-main>
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
         <!-- 搜索栏 -->
-        <el-form :model="listParam" :inline="true" size="default">
+        <el-form :model="listParam" :inline="true" size="default" ref="formRef">
             <el-form-item>
                 <!-- 反馈标题搜索输入框 -->
                 <el-input v-model="listParam.title" placeholder="请输入反馈标题"></el-input>
@@ -11,14 +11,14 @@
                 <!-- 搜索按钮 -->
                 <el-button :icon="Search" @click="searchBtn">搜索</el-button>
                 <!-- 重置按钮 -->
-                <el-button :icon="Close" type="danger" plain @click="resetBtn">重置</el-button>
+              <el-button :icon="Close" type="danger" plain @click="handleReset">重置查询条件</el-button>
                 <!-- 新增按钮 -->
                 <el-button v-permission="['sys:suggestList:add']" :icon="Plus" type="primary"
                     @click="addBtn">新增</el-button>
             </el-form-item>
         </el-form>
         <!-- 意见反馈数据表格 -->
-        <el-table :height="tableHeight" :data="tableData.list" border stripe>
+        <el-table :height="tableHeight" :data="tableData.list" border stripe ref="tableRef">
             <!-- 标题列 -->
             <el-table-column prop="title" label="标题"></el-table-column>
             <!-- 内容列 -->
@@ -42,7 +42,7 @@
         </el-pagination>
         <!-- 新增/编辑意见反馈弹窗 -->
         <AddSuggest ref="addRef" @reFresh="reFresh"></AddSuggest>
-    </el-main>
+
 </template>
 
 <script setup lang="ts">
@@ -58,6 +58,7 @@ import { Plus, Edit, Delete, Search, Close } from "@element-plus/icons-vue";
 // 导入组合式函数
 import useTable from "@/composables/suggest/useTable";
 import useSuggest from "@/composables/suggest/useSuggest";
+import { ref } from "vue";
 
 /**
  * 表格相关逻辑
@@ -70,6 +71,19 @@ const { listParam, searchBtn, resetBtn, getList, tableData, sizeChange, currentC
  * 包含新增、编辑、删除等操作
  */
 const { addBtn, editBtn, deleteBtn, addRef } = useSuggest(getList);
+
+// 引用表单和表格
+const formRef = ref<any>(null);
+const tableRef = ref<any>(null);
+
+// 更完整的重置逻辑
+const handleReset = () => {
+  listParam.currentPage = 1;
+  formRef.value?.resetFields?.();
+  tableRef.value?.clearSort?.();
+  tableRef.value?.clearSelection?.();
+  resetBtn();
+};
 </script>
 
 <style scoped></style>

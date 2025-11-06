@@ -26,6 +26,23 @@
     margin: 0px;
     height: 100%;
     box-sizing: border-box;
+    /* 删除外层隐藏滚动，避免“隐藏”策略，改为删除多余滚动源 */
+    /* 页面背景：青绿色高端健康主题 */
+    background: linear-gradient(135deg, #f6fffd 0%, #e9fffb 40%, #d9fff7 100%);
+    background-attachment: fixed;
+
+    /* 统一主题色与状态色（仅修改已有选择器内的属性） */
+    --el-color-primary: #17c5aa;
+    --el-color-primary-light-3: #3ad3bf;
+    --el-color-primary-dark-2: #0f8f7c;
+
+    /* 标签与状态色统一为青绿系 */
+    --el-color-success: #17c5aa;
+    --el-color-danger: #0f8f7c;
+
+    /* 表格交互背景：半透明青绿色，提升操作感 */
+    --el-table-row-hover-bg-color: rgba(23, 197, 170, 0.08);
+    --el-table-current-row-bg-color: rgba(23, 197, 170, 0.14);
   }
 
   /* ==================== 自定义滚动条样式 ==================== */
@@ -50,7 +67,8 @@
     border-radius: 8px;
     box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
-    background-color: #c8c8c8;
+    /* 滚动条滑块：青绿色主题色 */
+    background-color: #17c5aa;
   }
 
   /* ==================== Element Plus 组件样式修复 ==================== */

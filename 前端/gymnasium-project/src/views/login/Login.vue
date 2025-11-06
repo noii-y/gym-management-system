@@ -61,8 +61,8 @@
       </el-form-item>
       
       <!-- 操作按钮 -->
-      <el-form-item>
-        <el-row style="width: 100%">
+  <el-form-item>
+    <el-row style="width: 100%">
           <el-col :span="12" :offset="0" style="padding-right: 10px; padding-left: 0px">
             <el-button 
               style="width: 100%" 
@@ -73,15 +73,16 @@
               登录
             </el-button>
           </el-col>
+          <!-- 注册按钮：当前注册未启用，展示提示不跳转 -->
           <el-col :span="12" :offset="0" style="padding-right: 0px; padding-left: 10px">
             <el-button 
-              type="danger" 
-              plain 
               style="width: 100%" 
-              size="large"
-              @click="resetForm"
+              size="large" 
+              type="success" 
+              plain 
+              @click="goRegister"
             >
-              重置
+              注册
             </el-button>
           </el-col>
         </el-row>
@@ -161,16 +162,23 @@ const onSubmit = async () => {
       router.push({ path: "/" });
     } else {
       ElMessage.error(res.msg || "登录失败");
+      // 登录失败时隐式清空输入并清除校验提示
+      loginModel.username = "";
+      loginModel.password = "";
+      loginModel.code = "";
+      loginForm.value?.clearValidate();
     }
   }
 };
 
+// 移除显式重置逻辑：失败时自动清空
+
 /**
- * 重置表单
+ * 注册功能暂未启用：提示不跳转
  */
-const resetForm = () => {
-  loginForm.value.resetFields();
-};
+const goRegister = () => {
+  ElMessage.info('注册功能暂未开放')
+}
 </script>
 
 <style scoped lang="scss">
@@ -192,7 +200,8 @@ const resetForm = () => {
     -webkit-backdrop-filter: blur(3px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); /* 柔和阴影提升层次 */
     width: 430px;
-    height: 340px;
+    min-height: 340px;
+    height: auto;
     padding: 20px 35px;
 
     /* 登录标题样式 */

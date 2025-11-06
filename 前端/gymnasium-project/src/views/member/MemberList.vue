@@ -4,9 +4,9 @@
   支持按姓名、电话、会员卡号搜索，分页显示会员数据
 -->
 <template>
-  <el-main>
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
     <!-- 搜索栏 -->
-    <el-form :model="listParam" :inline="true" size="default">
+    <el-form :model="listParam" :inline="true" size="default" ref="formRef">
       <el-form-item>
         <el-input v-model="listParam.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
@@ -18,13 +18,13 @@
       </el-form-item>
       <el-form-item>
         <el-button :icon="Search" @click="searchBtn">搜索</el-button>
-        <el-button type="danger" plain :icon="Close" @click="resetBtn">重置</el-button>
+        <el-button type="danger" plain :icon="Close" @click="handleReset">重置查询条件</el-button>
         <el-button :icon="Plus" type="primary" @click="addBtn">新增</el-button>
       </el-form-item>
     </el-form>
     
     <!-- 会员数据表格 -->
-    <el-table :height="tableHeight" :data="tableList.list" border stripe>
+    <el-table :height="tableHeight" :data="tableList.list" border stripe ref="tableRef">
       <el-table-column prop="username" width="150" label="会员卡号"></el-table-column>
       <el-table-column prop="name" label="姓名"></el-table-column>
       <el-table-column prop="cardType" label="会员类型"></el-table-column>
@@ -88,7 +88,7 @@
     
     <!-- 充值弹框 -->
     <Recharge ref="rechargeRef" @refresh="refresh"></Recharge>
-  </el-main>
+
 </template>
 
 <script setup lang="ts">
@@ -105,6 +105,7 @@ import useTable from "@/composables/member/useTable";
 import useMember from "@/composables/member/useMember";
 import useJoin from "@/composables/member/useJoin";
 import useRecharge from "@/composables/member/useRecharge";
+import { ref } from "vue";
 
 // 表格相关功能：查询参数、数据获取、搜索、重置、分页等
 const {
@@ -127,6 +128,26 @@ const { joinRef, joinBtn } = useJoin();
 
 // 充值功能
 const { rechargeRef, rechargeBtn } = useRecharge();
+
+// 引用表单和表格，用于重置校验、排序和选择
+const formRef = ref<any>(null);
+const tableRef = ref<any>(null);
+
+// 更完整的重置：重置分页到第一页、清空表单、清理排序与选择
+const handleReset = () => {
+  // 分页归位到第一页，避免清空筛选后仍停留在后页
+  listParam.currentPage = 1;
+
+  // 重置表单字段与校验状态
+  formRef.value?.resetFields();
+
+  // 清理表格排序与已选行
+  tableRef.value?.clearSort?.();
+  tableRef.value?.clearSelection?.();
+
+  // 触发数据重载
+  resetBtn();
+};
 </script>
 
 <style scoped></style>

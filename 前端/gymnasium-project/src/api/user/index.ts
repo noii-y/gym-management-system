@@ -3,6 +3,7 @@
  * 包含用户的增删改查、角色管理等功能
  */
 import http from "@/http";
+import type { RequestOptions } from "@/http/index";
 import type { AddUserModel, listParam } from "./UserModel";
 
 /**
@@ -10,7 +11,8 @@ import type { AddUserModel, listParam } from "./UserModel";
  * @returns Promise 角色列表数据
  */
 export const getSelectApi = () => {
-  return http.get("/api/role/getSelect")
+  // 注册页会在未登录状态调用该接口，显式标记为无需鉴权
+  return http.get("/api/role/getSelect", undefined, { noAuth: true })
 }
 
 /**
@@ -18,8 +20,8 @@ export const getSelectApi = () => {
  * @param param 用户信息对象
  * @returns Promise 新增结果
  */
-export const addApi = (param: AddUserModel) => {
-  return http.post("/api/user", param)
+export const addApi = (param: AddUserModel, options?: RequestOptions) => {
+  return http.post("/api/user", param, options)
 }
 
 /**

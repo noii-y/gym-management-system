@@ -4,7 +4,7 @@
   包含充值金额、时间、操作人等信息的分页展示
 -->
 <template>
-  <el-main>
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
     <!-- 充值记录表格 -->
     <el-table :height="tableHeight" :data="tableData.list" border stripe>
       <el-table-column label="会员卡号" prop="username"></el-table-column>
@@ -25,7 +25,7 @@
       :total="listParam.total" 
       background>
     </el-pagination>
-  </el-main>
+
 </template>
 
 <script setup lang="ts">
@@ -34,9 +34,10 @@
  * 用于显示当前登录会员的充值历史记录
  */
 import type { MemberRecharge } from "@/api/member/MemberModel";
-import { nextTick, onMounted, reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref, onBeforeUnmount, onActivated } from "vue";
 import { getMyRechargeApi } from "@/api/member";
 import { userStore } from "@/store/user";
+import { ElMessage } from "element-plus";
 
 /**
  * 表格高度，用于动态计算表格显示高度
@@ -73,15 +74,26 @@ const tableData = reactive({
  * 根据当前登录用户信息获取其充值历史记录
  */
 const getList = async () => {
-  // 设置查询参数为当前登录用户信息
-  listParam.memberId = store.getUserId;
-  listParam.userType = store.getUserType;
-  
-  let res = await getMyRechargeApi(listParam);
-  if (res && res.code == 200) {
-    console.log(res);
-    tableData.list = res.data.records;  
-    listParam.total = res.data.total;
+  try {
+    await waitForUserReady();
+    // 设置查询参数为当前登录用户信息
+    listParam.memberId = store.getUserId;
+    listParam.userType = store.getUserType;
+
+    const res = await getMyRechargeApi(listParam);
+    if (res && res.code == 200) {
+      tableData.list = res.data.records;
+      listParam.total = res.data.total;
+    } else {
+      // 失败重试一次，提升首屏稳定性
+      const retry = await getMyRechargeApi(listParam);
+      if (retry && retry.code == 200) {
+        tableData.list = retry.data.records;
+        listParam.total = retry.data.total;
+      }
+    }
+  } catch (e: any) {
+    ElMessage.error(e?.message || "获取充值记录失败");
   }
 };
 
@@ -110,11 +122,39 @@ const currentChange = (page: number) => {
 onMounted(() => {
   nextTick(() => {
     // 动态计算表格高度，减去头部和其他元素的高度
-    tableHeight.value = window.innerHeight - 230;
+    calcHeight();
   });
+  window.addEventListener("resize", calcHeight);
   // 获取初始充值记录数据
   getList();
 });
+
+onActivated(() => {
+  // 从标签页或路由返回时，确保数据同步
+  getList();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", calcHeight);
+});
+
+const calcHeight = () => {
+  tableHeight.value = Math.max(300, window.innerHeight - 230);
+};
+
+// 等待用户信息就绪（token/userId），最多等待2秒
+const waitForUserReady = async () => {
+  const start = Date.now();
+  return new Promise<void>((resolve) => {
+    const timer = setInterval(() => {
+      const ready = !!store.getToken;
+      if (ready || Date.now() - start > 2000) {
+        clearInterval(timer);
+        resolve();
+      }
+    }, 100);
+  });
+};
 </script>
 
 <style scoped></style>

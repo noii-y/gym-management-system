@@ -1,7 +1,7 @@
 <!-- 菜单管理列表页面 -->
 <!-- 提供菜单的查看、新增、编辑、删除功能，支持树形结构展示 -->
 <template>
-  <el-main style="padding-top: 10px">
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
       <!-- 操作按钮区域 -->
       <div style="display: flex; align-items: center">
           <!-- 新增菜单按钮 -->
@@ -72,7 +72,7 @@
 
       <!-- 新增、编辑菜单对话框组件 -->
       <add-menu ref="addRef" @refresh="refresh"></add-menu>
-  </el-main>
+
 </template>
 
 <script setup lang="ts">

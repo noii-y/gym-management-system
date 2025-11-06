@@ -1,6 +1,6 @@
 <!-- 我的课程管理页面组件 -->
 <template>
-    <el-main>
+    <!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
         <!-- 课程列表表格 -->
         <el-table :height="tableHeight" :data="tableData.list" border stripe>
             <!-- 课程封面列 -->
@@ -32,7 +32,7 @@
             :page-size="listParam.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listParam.total"
             background>
         </el-pagination>
-    </el-main>
+    
 </template>
 
 <script setup lang="ts">

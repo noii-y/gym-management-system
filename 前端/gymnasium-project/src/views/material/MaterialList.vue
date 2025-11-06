@@ -4,10 +4,10 @@
   包含器材名称搜索、数量显示、操作按钮等
 -->
 <template>
-  <el-main>
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
     <!-- 搜索栏 -->
     <!-- 健身器材信息搜索表单，支持按器材名称搜索 -->
-    <el-form :model="listParam" :inline="true" size="default">
+    <el-form :model="listParam" :inline="true" size="default" ref="formRef">
       <el-form-item>
         <!-- 器材名称搜索输入框 -->
         <el-input v-model="listParam.name" placeholder="请输入器材名称" />
@@ -17,8 +17,8 @@
         <!-- 搜索按钮 -->
         <el-button :icon="Search" @click="searchBtn">搜索</el-button>
         <!-- 重置搜索条件按钮 -->
-        <el-button :icon="Close" type="danger" plain @click="resetBtn">
-          重置
+        <el-button :icon="Close" type="danger" plain @click="handleReset">
+          重置查询条件
         </el-button>
         <!-- 新增健身器材按钮 -->
         <el-button :icon="Plus" type="primary" @click="addBtn">
@@ -28,7 +28,7 @@
     </el-form>
 
     <!-- 健身器材信息数据表格 -->
-    <el-table :data="tableData.list" :height="tableHeight" border stripe>
+    <el-table :data="tableData.list" :height="tableHeight" border stripe ref="tableRef">
       <!-- 器材名称列 -->
       <el-table-column prop="name" label="器材名称" />
       <!-- 器材数量列 -->
@@ -58,7 +58,7 @@
 
     <!-- 新增/编辑健身器材信息弹窗 -->
     <AddMaterial ref="addRef" @reFresh="reFresh" />
-  </el-main>
+
 </template>
 
 <script setup lang="ts">
@@ -68,6 +68,7 @@
  */
 
 // 导入Element Plus图标
+import { ref } from 'vue'
 import { Plus, Edit, Delete, Search, Close } from '@element-plus/icons-vue';
 // 导入子组件
 import AddMaterial from './AddMaterial.vue';
@@ -101,6 +102,17 @@ const {
   deleteBtn,      // 删除按钮处理函数
   addRef,         // 新增/编辑弹窗引用
 } = useMaterial(getList);
+
+// 更完整的重置查询条件包装
+const formRef = ref<any>(null)
+const tableRef = ref<any>(null)
+const handleReset = () => {
+  listParam.currentPage = 1
+  formRef.value?.resetFields?.()
+  tableRef.value?.clearSort?.()
+  tableRef.value?.clearSelection?.()
+  resetBtn()
+}
 </script>
 
 <style scoped></style>

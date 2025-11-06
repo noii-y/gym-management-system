@@ -21,6 +21,12 @@ router.beforeEach(async (to, from, next) => {
   // 获取菜单store实例
   const mstore = menuStore()
   
+  // 白名单路由优先放行（即使存在token也不做鉴权或数据拉取）
+  if (whiteList.indexOf(to.path) !== -1) {
+    next()
+    return
+  }
+
   // 获取用户token
   const token = ustore.getToken
   

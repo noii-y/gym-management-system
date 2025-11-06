@@ -5,22 +5,22 @@
   包含购物车功能，支持商品选择、数量调整和订单提交
 -->
 <template>
-    <el-main>
+    <!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
         <!-- 搜索栏 -->
-        <el-form :model="listParam" :inline="true" size="default">
+        <el-form :model="listParam" :inline="true" size="default" ref="formRef">
             <el-form-item>
                 <el-input v-model="listParam.name" placeholder="请输入商品名称"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button :icon="Search" @click="searchBtn">搜索</el-button>
-                <el-button :icon="Close" type="danger" plain @click="resetBtn">重置</el-button>
+          <el-button :icon="Close" type="danger" plain @click="handleReset">重置查询条件</el-button>
                 <el-button v-permission="['sys:orderList:down']" :icon="Plus" type="primary"
                     @click="order">下单</el-button>
             </el-form-item>
         </el-form>
 
         <!-- 订单数据表格 -->
-        <el-table :height="orderTableHeight" :data="tableData.list" border stripe>
+        <el-table :height="orderTableHeight" :data="tableData.list" border stripe ref="tableRef">
             <el-table-column prop="image" width="90" label="商品图片" align="center">
                 <template #default="scope">
                     <el-image style="width: 60px; height: 60px; border-radius: 50%" :src="scope.row.image"></el-image>
@@ -54,18 +54,18 @@
                 <el-drawer custom-class="childDrawer" size="50%" v-model="innerDrawer" title="商品列表"
                     :append-to-body="true" :before-close="innerCloseClick">
                     <!-- 商品搜索栏 -->
-                    <el-form :model="goodsParam" :inline="true" size="default">
+                    <el-form :model="goodsParam" :inline="true" size="default" ref="goodsFormRef">
                         <el-form-item>
                             <el-input v-model="goodsParam.name" placeholder="请输入商品名称"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button :icon="Search" @click="searchGoodsBtn">搜索</el-button>
-                            <el-button type="danger" plain :icon="Close" @click="resetGoodsBtn">重置</el-button>
+            <el-button type="danger" plain :icon="Close" @click="handleGoodsReset">重置查询条件</el-button>
                         </el-form-item>
                     </el-form>
                     
                     <!-- 商品列表表格 -->
-                    <el-table :height="goodsHeight" :data="tableList.list" border stripe>
+                    <el-table :height="goodsHeight" :data="tableList.list" border stripe ref="goodsTableRef">
                         <el-table-column prop="image" width="90" label="商品图片" align="center">
                             <template #default="scope">
                                 <el-image style="width: 40px; height: 40px; border-radius: 50%"
@@ -131,7 +131,7 @@
                 </div>
             </template>
         </el-drawer>
-    </el-main>
+    
 </template>
 
 <script setup lang="ts">
@@ -209,6 +209,32 @@ const commit = async () => {
         ElMessage.success(res.msg);
         faDrawer.value = false;
     }
+};
+
+// 引用主搜索表单和订单表格
+const formRef = ref<any>(null);
+const tableRef = ref<any>(null);
+
+// 引用子抽屉中的商品搜索表单和商品表格
+const goodsFormRef = ref<any>(null);
+const goodsTableRef = ref<any>(null);
+
+// 主列表更完整的重置
+const handleReset = () => {
+  listParam.currentPage = 1;
+  formRef.value?.resetFields?.();
+  tableRef.value?.clearSort?.();
+  tableRef.value?.clearSelection?.();
+  resetBtn();
+};
+
+// 商品子列表更完整的重置
+const handleGoodsReset = () => {
+  goodsParam.currentPage = 1;
+  goodsFormRef.value?.resetFields?.();
+  goodsTableRef.value?.clearSort?.();
+  goodsTableRef.value?.clearSelection?.();
+  resetGoodsBtn();
 };
 </script>
 

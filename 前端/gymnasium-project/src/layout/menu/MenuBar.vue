@@ -12,7 +12,7 @@
     :default-active="activeIndex" 
     class="el-menu-vertical-demo" 
     unique-opened
-    background-color="#304156" 
+    background-color="#0f3d3a" 
     router
   >
     <menu-item :menuList="menuList"></menu-item>
@@ -78,21 +78,21 @@ console.log(menuList)
 
 // 菜单项默认颜色
 :deep(.el-menu .el-menu-item) {
-  color: #bfcbd9;
+  color: #cfe7e4;
 }
 
 // 菜单激活状态文字颜色
 :deep(.el-menu-item.is-active) {
-  color: #409eff !important;
+  color: #17c5aa !important;
 }
 
 // 当前打开菜单的所有子菜单颜色
 :deep(.is-opened .el-menu-item) {
-  background-color: #1f2d3d !important;
+  background-color: #0a2f2c !important;
 }
 
 // 鼠标悬停菜单的颜色
 :deep(.el-menu-item:hover) {
-  background-color: #001528 !important;
+  background-color: #124e48 !important;
 }
 </style>

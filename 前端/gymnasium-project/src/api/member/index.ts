@@ -3,6 +3,7 @@
  * 包含会员的增删改查、办卡、充值等功能
  */
 import http from "@/http"
+import type { RequestOptions } from "@/http/index"
 import type { MemberType, MemberParam, ApplyCard, Recharge } from "./MemberModel"
 
 /**
@@ -10,8 +11,8 @@ import type { MemberType, MemberParam, ApplyCard, Recharge } from "./MemberModel
  * @param param 会员信息对象
  * @returns Promise 新增结果
  */
-export const addApi = (param: MemberType) => {
-  return http.post("/api/member", param)
+export const addApi = (param: MemberType, options?: RequestOptions) => {
+  return http.post("/api/member", param, options)
 }
 
 /**

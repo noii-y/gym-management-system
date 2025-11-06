@@ -1,5 +1,5 @@
 <template>
-    <el-main :style="{ height: mianHeight + 'px' }">
+    <!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
         <!-- 数据统计 -->
         <el-row :gutter="20" type="flex" class="row-bg" justify="center" style="margin-bottom: 80px">
             <el-col :span="6">
@@ -65,7 +65,7 @@
                 <el-divider></el-divider>
             </div>
         </el-card>
-    </el-main>
+    
 </template>
 
 <script setup lang="ts">

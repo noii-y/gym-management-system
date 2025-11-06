@@ -44,20 +44,22 @@ import BreadCrumb from "./header/BreadCrumb.vue"
 
   .asside {
     // 侧边栏背景色
-    background-color: #304156;
+    background-color: #0f3d3a;
   }
 
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #009688;
+    background-color: #14b7a1;
   }
 
   .main {
     padding-top: 1px;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
+    /* 增加左右内边距，抵消 el-row(:gutter) 的负边距，删除底部横向滚动条 */
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    overflow: auto;
   }
 }
 </style>

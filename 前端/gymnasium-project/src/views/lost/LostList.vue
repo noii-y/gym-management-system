@@ -4,10 +4,10 @@
   包含物品名称搜索、状态显示、操作按钮等
 -->
 <template>
-  <el-main>
+<!-- 删除冗余 el-main 包裹，避免产生双滚动条 -->
     <!-- 搜索栏 -->
     <!-- 失物招领信息搜索表单，支持按物品名称搜索 -->
-    <el-form :model="listParam" :inline="true" size="default">
+    <el-form :model="listParam" :inline="true" size="default" ref="formRef">
       <el-form-item>
         <!-- 物品名称搜索输入框 -->
         <el-input v-model="listParam.lostName" placeholder="请输入物品名称" />
@@ -17,8 +17,8 @@
         <!-- 搜索按钮 -->
         <el-button :icon="Search" @click="searchBtn">搜索</el-button>
         <!-- 重置搜索条件按钮 -->
-        <el-button type="danger" plain :icon="Close" @click="resetBtn">
-          重置
+        <el-button type="danger" plain :icon="Close" @click="handleReset">
+          重置查询条件
         </el-button>
         <!-- 新增失物招领信息按钮 -->
         <el-button v-permission="['sys:lostList:add']" :icon="Plus" type="primary" @click="addBtn">
@@ -28,7 +28,7 @@
     </el-form>
 
     <!-- 失物招领信息数据表格 -->
-    <el-table :data="tableData.list" :height="tableHeight" border stripe>
+    <el-table :data="tableData.list" :height="tableHeight" border stripe ref="tableRef">
       <!-- 物品名称列 -->
       <el-table-column prop="lostName" label="物品名称" />
       <!-- 捡到人列 -->
@@ -90,7 +90,7 @@
 
     <!-- 认领失物弹窗 -->
     <LostPerson ref="lostPersonRef" @reFresh="reFresh" />
-  </el-main>
+
 </template>
 
 <script setup lang="ts">
@@ -100,6 +100,7 @@
  */
 
 // 导入Element Plus图标
+import { ref } from 'vue'
 import { Plus, Edit, Delete, Search, Close } from '@element-plus/icons-vue'
 // 导入子组件
 import AddLost from './AddLost.vue'
@@ -136,6 +137,17 @@ const {
   lostBtn,        // 认领按钮处理函数
   lostPersonRef,  // 认领弹窗引用
 } = useLost(getList)
+
+// 更完整的重置查询条件包装
+const formRef = ref<any>(null)
+const tableRef = ref<any>(null)
+const handleReset = () => {
+  listParam.currentPage = 1
+  formRef.value?.resetFields?.()
+  tableRef.value?.clearSort?.()
+  tableRef.value?.clearSelection?.()
+  resetBtn()
+}
 </script>
 
 <style scoped></style>
