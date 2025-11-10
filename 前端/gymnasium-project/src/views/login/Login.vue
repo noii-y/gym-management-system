@@ -87,6 +87,12 @@
           </el-col>
         </el-row>
       </el-form-item>
+      <!-- 忘记密码入口 -->
+      <el-form-item>
+        <div style="width:100%;display:flex;justify-content:flex-end">
+          <el-button type="primary" link @click="goReset">忘记密码？</el-button>
+        </div>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -178,6 +184,11 @@ const onSubmit = async () => {
  */
 const goRegister = () => {
   ElMessage.info('注册功能暂未开放')
+}
+
+// 跳转忘记密码页
+const goReset = () => {
+  router.push({ path: '/resetPassword' })
 }
 </script>
 

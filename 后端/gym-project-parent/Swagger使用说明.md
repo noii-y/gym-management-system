@@ -147,7 +147,7 @@ mvn spring-boot:run
 
 ## 10. 总结
 
-Swagger是API开发的得力助手，通过本文档你应该掌握了：
+Swagger是API开发的得力助手：
 
 ✅ **Swagger的基本概念**和应用场景  
 ✅ **项目配置**和访问方法  

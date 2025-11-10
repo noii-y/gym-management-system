@@ -16,6 +16,12 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     component: () => import('@/views/login/Login.vue'),
     name: "login"
   },
+  // 忘记密码页面
+  {
+    path: "/resetPassword",
+    component: () => import('@/views/login/ResetPassword.vue'),
+    name: "resetPassword"
+  },
   // 注册页面先注释
   // {
   //   path: "/register",
