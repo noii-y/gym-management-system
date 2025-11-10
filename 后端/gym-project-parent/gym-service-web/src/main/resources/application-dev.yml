@@ -42,7 +42,7 @@ jwt:
 # ==================== 安全配置 ====================
 # 不需要token验证的请求URL（逗号分隔）
 ignore:
-  url: /api/login/login,/api/login/image,/api/course/list,/api/member,/api/user,/api/role/getSelect,/api/login/getMenuList,/api/login/getInfo
+  url: /api/login/login,/api/login/image,/api/course/list,/api/member,/api/user,/api/role/getSelect,/api/login/getMenuList,/api/login/getInfo,/api/password/resetByContact
 
 # ==================== 日志配置 ====================
 logging:

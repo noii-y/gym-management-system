@@ -63,20 +63,26 @@ public class SysUserController {
         QueryWrapper<SysUser> query = new QueryWrapper<>();
 
         query.lambda().eq(SysUser::getUsername,sysUser.getUsername());
-        SysUser one = sysUserService.getOne(query);
-        if(one != null){
+        SysUser existUser = sysUserService.getOne(query);
+        if(existUser != null){
             return ResultUtils.error("账户已经被占用");
         }
-        //密码加密
-        if(StringUtils.isNotEmpty(sysUser.getPassword())){
-
-            sysUser.setPassword(DigestUtils.md5DigestAsHex(sysUser.getPassword().getBytes()));
+        // 密码加密（统一使用 BCrypt，与 Spring Security 配置保持一致）
+        if (StringUtils.isNotEmpty(sysUser.getPassword())) {
+            sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         }
         sysUser.setIsAdmin("0");
         sysUser.setCreateTime(new Date());
         //存入数据库
         boolean save = sysUserService.save(sysUser);
         if(save){
+            // 同步维护用户-角色关联
+            if (sysUser.getRoleId() != null) {
+                SysUserRole ur = new SysUserRole();
+                ur.setUserId(sysUser.getUserId());
+                ur.setRoleId(sysUser.getRoleId());
+                sysUserRoleService.save(ur);
+            }
             return ResultUtils.success("新增用户成功!");
         }
         return  ResultUtils.error("新增用户失败!");
@@ -88,8 +94,8 @@ public class SysUserController {
         QueryWrapper<SysUser> query = new QueryWrapper<>();
 
         query.lambda().eq(SysUser::getUsername,sysUser.getUsername());
-        SysUser one = sysUserService.getOne(query);
-        if(one != null && one.getUserId() != sysUser.getUserId())
+        SysUser existUser = sysUserService.getOne(query);
+        if(existUser != null && existUser.getUserId() != sysUser.getUserId())
         {
             return ResultUtils.error("账户已经被占用");
         }
@@ -104,6 +110,21 @@ public class SysUserController {
         //存入数据库
         boolean save = sysUserService.updateById(sysUser);
         if(save){
+            // 同步维护用户-角色关联（更新或新增）
+            if (sysUser.getRoleId() != null) {
+                QueryWrapper<SysUserRole> q = new QueryWrapper<>();
+                q.lambda().eq(SysUserRole::getUserId, sysUser.getUserId());
+                SysUserRole existUserRole = sysUserRoleService.getOne(q);
+                if (existUserRole != null) {
+                    existUserRole.setRoleId(sysUser.getRoleId());
+                    sysUserRoleService.updateById(existUserRole);
+                } else {
+                    SysUserRole ur = new SysUserRole();
+                    ur.setUserId(sysUser.getUserId());
+                    ur.setRoleId(sysUser.getRoleId());
+                    sysUserRoleService.save(ur);
+                }
+            }
             return ResultUtils.success("编辑用户成功!");
         }
         return  ResultUtils.error("编辑用户失败!");

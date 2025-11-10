@@ -84,6 +84,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/home/getHotGoods", 
                         "/api/home/getHotCards", 
                         "/api/course/list",
+                        // 忘记密码接口允许未登录访问
+                        "/api/password/resetByContact",
                         "/api/member",
                         "/api/user",
                         "/api/role/getSelect"
@@ -127,7 +129,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customizedUserDetailService);
+        // 绑定自定义 UserDetailsService 并显式配置密码加密器，确保使用 BCrypt 进行口令匹配
+        auth.userDetailsService(customizedUserDetailService)
+            .passwordEncoder(passwordEncoder());
     }
 
     /**

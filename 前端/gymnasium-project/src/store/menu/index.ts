@@ -68,8 +68,12 @@ const componentMap: Record<string, any> = {
   '/member/AddCard': AddCard,
   '/member/AddMember': AddMember,
   '/member/CardType': CardType,
+  // 兼容数据库中的旧路径写法
+  '/member/type/CardType': CardType,
   '/member/MemberList': MemberList,
+  '/member/list/MemberList': MemberList,
   '/member/MyFee': MyFee,
+  '/member/fee/MyFee': MyFee,
   '/member/list/JoinApply': JoinApply,
   '/member/list/Recharge': Recharge,
   '/mycourse/mycourse': MyCourse,
@@ -137,6 +141,8 @@ export const menuStore = defineStore('menuStore', {
           let accessRoute: RouteRecordRaw[] = [];
           
           if (res && res.code == 200) {
+            // 调试日志：后端返回的菜单路由数据
+            try { console.log('[menu] getMenuListApi data:', res.data) } catch (_) {}
             // 动态生成路由
             accessRoute = generateRoutes(res.data, router)
             
@@ -197,7 +203,12 @@ export function generateRoutes(routes: RouteRecordRaw[], router: Router): RouteR
         tmp.component = Layout;
       } else {
         // 从组件映射表中获取组件
-        tmp.component = componentMap[component]
+        const mapped = componentMap[component]
+        if (!mapped) {
+          // 映射缺失时记录日志，方便排查数据库中的 url 是否与前端组件映射一致
+          try { console.warn('[menu] component not mapped:', component, 'path:', tmp.path) } catch (_) {}
+        }
+        tmp.component = mapped
       }
     }
     
@@ -220,6 +231,13 @@ export function generateRoutes(routes: RouteRecordRaw[], router: Router): RouteR
       tmp.children = generateRoutes(tmp.children, router)
     }
     
+    // 组件缺失的叶子节点不添加，避免报错
+    if (!tmp.children || tmp.children.length === 0) {
+      if (!tmp.component) {
+        return
+      }
+    }
+
     // 动态添加路由到Vue Router
     router.addRoute(tmp)
     res.push(tmp)
