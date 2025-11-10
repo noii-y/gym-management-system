@@ -9,7 +9,7 @@ import { menuStore } from "./store/menu"
 /**
  * 白名单路由 - 无需权限即可访问的页面
  */
-const whiteList = ['/login', '/resetPassword']
+const whiteList = ['/login', '/register', '/resetPassword']
 
 /**
  * 全局前置路由守卫

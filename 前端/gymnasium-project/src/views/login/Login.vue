@@ -183,7 +183,7 @@ const onSubmit = async () => {
  * 注册功能暂未启用：提示不跳转
  */
 const goRegister = () => {
-  ElMessage.info('注册功能暂未开放')
+  router.push({ path: '/register' })
 }
 
 // 跳转忘记密码页
