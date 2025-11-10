@@ -15,6 +15,7 @@ export interface UserInfo {
   userType: string    // 用户类型
   phone: string       // 手机号
   email: string       // 邮箱
+    sex: string         // 性别
   avatar?: string     // 头像URL（可选）
 }
 
@@ -44,6 +45,7 @@ export const userStore = defineStore('userStore', {
         userType: '',
         phone: '',
         email: '',
+        sex: '',
         avatar: ''
       },
       token: '',        // JWT认证令牌
@@ -201,6 +203,7 @@ export const userStore = defineStore('userStore', {
         userType: '',
         phone: '',
         email: '',
+        sex: '',
         avatar: ''
       }
       this.token = ''
@@ -221,6 +224,11 @@ export const userStore = defineStore('userStore', {
           if (res && res.code == 200) {
             // 设置用户权限列表
             this.codeList = res.data.permissons
+            // 同步基础信息：姓名与性别
+            this.userInfo.name = res.data.name || this.userInfo.name
+            this.userInfo.sex = res.data.sex || this.userInfo.sex
+            // 可选：同步后端返回的用户ID
+            if (res.data.userId) this.userInfo.userId = String(res.data.userId)
           }
           resolve(this.codeList)
         }).catch((error) => {

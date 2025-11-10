@@ -6,7 +6,39 @@
         <template v-slot:content>
             <!-- 用户信息表单 -->
             <el-form :model="addModel" ref="addFormRef" :rules="rules" label-width="80px" size="default">
-                <!-- 第一行：姓名和性别 -->
+                <!-- 第一行：账户 和 密码（密码仅新增显示） -->
+                <el-row>
+                    <el-col :span="12" :offset="0">
+                        <el-form-item prop="username" label="账户">
+                            <el-input v-model="addModel.username"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col v-if="addModel.type == EditType.ADD" :span="12" :offset="0">
+                        <el-form-item prop="password" label="密码">
+                            <el-input v-model="addModel.password"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <!-- 第二行：类型 和 状态 -->
+                <el-row>
+                    <el-col :span="12" :offset="0">
+                        <el-form-item prop="userType" label="类型">
+                            <el-radio-group v-model="addModel.userType">
+                                <el-radio :label="'1'">员工</el-radio>
+                                <el-radio :label="'2'">教练</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12" :offset="0">
+                        <el-form-item prop="status" label="状态">
+                            <el-radio-group v-model="addModel.status">
+                                <el-radio :label="'0'">停用</el-radio>
+                                <el-radio :label="'1'">启用</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <!-- 第三行：姓名 和 性别 -->
                 <el-row>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="nickName" label="姓名">
@@ -22,7 +54,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 第二行：电话和邮箱 -->
+                <!-- 第四行：电话 和 邮箱 -->
                 <el-row>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="phone" label="电话">
@@ -35,51 +67,22 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 第三行：薪水和用户类型 -->
+                <!-- 第五行：薪水 -->
                 <el-row>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="salary" label="薪水">
                             <el-input v-model="addModel.salary"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="userType" label="类型">
-                            <el-radio-group v-model="addModel.userType">
-                                <el-radio :label="'1'">员工</el-radio>
-                                <el-radio :label="'2'">教练</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                    </el-col>
                 </el-row>
-                <!-- 第四行：角色和状态 -->
-                <el-row>
-                    <el-col :span="12" :offset="0">
+                <!-- 角色（仅编辑显示） -->
+                <el-row v-if="addModel.type != EditType.ADD">
+                    <el-col :span="24" :offset="0">
                         <el-form-item prop="roleId" label="角色">
                             <el-select v-model="addModel.roleId" class="m-2" placeholder="请选择角色" size="default">
                                 <el-option v-for="item in roleData.list" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="status" label="状态">
-                            <el-radio-group v-model="addModel.status">
-                                <el-radio :label="'0'">停用</el-radio>
-                                <el-radio :label="'1'">启用</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <!-- 第五行：账户和密码（密码仅在新增时显示） -->
-                <el-row>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="username" label="账户">
-                            <el-input v-model="addModel.username"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col v-if="addModel.type == '0'" :span="12" :offset="0">
-                        <el-form-item prop="password" label="密码">
-                            <el-input v-model="addModel.password"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -234,11 +237,17 @@ const rules = reactive({
             message: "请输入密码",
         },
     ],
+    // 角色在新增时不必填，编辑时需要；使用自定义校验器保证一致性
     roleId: [
         {
-            required: true,
+            validator: (_rule: any, value: string, callback: (e?: Error) => void) => {
+                if (addModel.type === EditType.ADD) {
+                    callback();
+                } else {
+                    if (!value) callback(new Error("请选择角色")); else callback();
+                }
+            },
             trigger: "change",
-            message: "请选择角色",
         },
     ],
 });

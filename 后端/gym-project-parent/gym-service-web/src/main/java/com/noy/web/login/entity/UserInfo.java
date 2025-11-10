@@ -27,6 +27,11 @@ public class UserInfo {
      * 用户姓名
      */
     private String name;
+
+    /**
+     * 性别
+     */
+    private String sex;
     
     /**
      * 用户权限列表

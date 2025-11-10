@@ -309,6 +309,7 @@ public class LoginController {
         
         // 设置返回信息
         userInfo.setName(member.getName());
+        userInfo.setSex(member.getSex());
         userInfo.setUserId(member.getMemberId());
         userInfo.setPermissons(permissions);
         
@@ -349,6 +350,7 @@ public class LoginController {
         
         // 设置返回信息
         userInfo.setName(user.getNickName());
+        userInfo.setSex(user.getSex());
         userInfo.setUserId(user.getUserId());
         userInfo.setPermissons(permissions);
         

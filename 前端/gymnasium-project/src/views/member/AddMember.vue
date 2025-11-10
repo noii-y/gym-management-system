@@ -7,16 +7,27 @@
         <template v-slot:content>
             <!-- 会员信息表单 -->
             <el-form :model="addModel" ref="addRormRef" :rules="rules" label-width="80px" size="default">
-                <!-- 第一行：姓名和性别 -->
+                <!-- 第一行：姓名 和 会员卡号（登录优先） -->
                 <el-row>
                     <el-col :span="12" :offset="0">
-                        <!-- 会员姓名输入框 -->
                         <el-form-item prop="name" label="姓名">
                             <el-input v-model="addModel.name"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" :offset="0">
-                        <!-- 性别选择（单选按钮组） -->
+                        <el-form-item prop="username" label="会员卡号">
+                            <el-input type="number" v-model="addModel.username"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <!-- 第二行：密码 和 性别 -->
+                <el-row>
+                    <el-col :span="12" :offset="0">
+                        <el-form-item prop="password" label="密码">
+                            <el-input v-model="addModel.password"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12" :offset="0">
                         <el-form-item prop="sex" label="性别">
                             <el-radio-group v-model="addModel.sex">
                                 <el-radio :label="'0'">男</el-radio>
@@ -25,18 +36,19 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 第二行：电话和年龄 -->
+                <!-- 第三行：电话 和 状态 -->
                 <el-row>
                     <el-col :span="12" :offset="0">
-                        <!-- 联系电话输入框 -->
                         <el-form-item prop="phone" label="电话">
                             <el-input v-model="addModel.phone"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" :offset="0">
-                        <!-- 年龄输入框 -->
-                        <el-form-item prop="age" label="年龄">
-                            <el-input v-model="addModel.age"></el-input>
+                        <el-form-item prop="status" label="状态">
+                            <el-radio-group v-model="addModel.status">
+                                <el-radio :label="'0'">停用</el-radio>
+                                <el-radio :label="'1'">启用</el-radio>
+                            </el-radio-group>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -57,24 +69,34 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+                <!-- 身体指标：年龄 和 身高 -->
                 <el-row>
+                    <el-col :span="12" :offset="0">
+                        <el-form-item prop="age" label="年龄">
+                            <el-input v-model="addModel.age"></el-input>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="height" label="身高">
                             <el-input v-model="addModel.height"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="12" :offset="0">
+                </el-row>
+                <!-- 身体指标：体重 和 腰围（腰围缩小） -->
+                <el-row>
+                    <el-col :span="16" :offset="0">
                         <el-form-item prop="weight" label="体重">
                             <el-input v-model="addModel.weight"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12" :offset="0">
+                    <el-col :span="8" :offset="0">
                         <el-form-item prop="waist" label="腰围">
                             <el-input v-model="addModel.waist"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <!-- 编辑模式下显示角色选择 -->
+                <el-row v-if="addModel.type != EditType.ADD">
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="roleId" label="角色">
                             <el-select v-model="addModel.roleId" class="m-2" placeholder="请选择角色" size="default">
@@ -84,28 +106,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="status" label="状态">
-                            <el-radio-group v-model="addModel.status">
-                                <el-radio :label="'0'">停用</el-radio>
-                                <el-radio :label="'1'">启用</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="username" label="会员卡号">
-                            <el-input type="number" v-model="addModel.username"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="password" label="密码">
-                            <el-input v-model="addModel.password"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                
             </el-form>
         </template>
     </SysDialog>
@@ -153,10 +154,13 @@ const { dialog, onClose, onConfirm, onShow } = useDialog();
  * @param row 编辑时的会员数据（可选）
  */
 const show = async (type: string, row?: MemberType) => {
-    // 获取角色列表数据
-    await listRole()
-    // 获取会员的角色信息
-    await getMemberRole(row!?.memberId)
+    // 仅在编辑模式下加载角色列表与当前角色，新增时不需要角色选择
+    if (type === EditType.EDIT) {
+        await listRole();
+        if (row && row.memberId) {
+            await getMemberRole(row.memberId);
+        }
+    }
     
     // 设置对话框尺寸
     dialog.width = 680;
