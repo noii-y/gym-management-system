@@ -106,6 +106,8 @@ public class SysRoleController {
                 SelectType type = new SelectType();
                 type.setValue(item.getRoleId());
                 type.setLabel(item.getRoleName());
+                // 同步返回角色类型，供前端联动过滤使用
+                type.setTypes(item.getTypes());
                 selectTypeList.add(type);
             });
         }

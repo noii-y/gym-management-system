@@ -7,7 +7,7 @@
  * 角色数据模型类型
  */
 export type AddRoleModel = {
-  type: string     // 操作类型
+  types: string    // 角色类型（1：员工类型 2：会员类型）
   roleId: string   // 角色ID
   roleName: string // 角色名称
   remark: string   // 备注

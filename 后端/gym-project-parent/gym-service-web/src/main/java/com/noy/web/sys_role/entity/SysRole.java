@@ -41,6 +41,11 @@ public class SysRole {
      * 角色备注
      */
     private String remark;
+
+    /**
+     * 角色类型（1：员工类型 2：会员类型）
+     */
+    private String types;
     
     /**
      * 创建时间

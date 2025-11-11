@@ -19,14 +19,13 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 第二行：类型 和 状态 -->
+                <!-- 第二行：类型（选择角色名称） 和 状态 -->
                 <el-row>
                     <el-col :span="12" :offset="0">
-                        <el-form-item prop="userType" label="类型">
-                            <el-radio-group v-model="addModel.userType">
-                                <el-radio :label="'1'">员工</el-radio>
-                                <el-radio :label="'2'">教练</el-radio>
-                            </el-radio-group>
+                        <el-form-item prop="roleId" label="类型">
+                            <el-select v-model="addModel.roleId" placeholder="请选择角色" style="width: 100%">
+                                <el-option v-for="item in roleData.list" :key="item.value" :label="item.label" :value="item.value" />
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" :offset="0">
@@ -38,13 +37,8 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 第三行：姓名 和 性别 -->
+                <!-- 第三行：性别 -->
                 <el-row>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="nickName" label="姓名">
-                            <el-input v-model="addModel.nickName"></el-input>
-                        </el-form-item>
-                    </el-col>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="sex" label="性别">
                             <el-radio-group v-model="addModel.sex">
@@ -54,38 +48,33 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 第四行：电话 和 邮箱 -->
+                <!-- 第四行：姓名 和 电话 -->
                 <el-row>
+                    <el-col :span="12" :offset="0">
+                        <el-form-item prop="nickName" label="姓名">
+                            <el-input v-model="addModel.nickName"></el-input>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="phone" label="电话">
                             <el-input v-model="addModel.phone"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <!-- 第四行：邮箱 和 薪水 -->
+                <el-row>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="email" label="邮箱">
                             <el-input v-model="addModel.email"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <!-- 第五行：薪水 -->
-                <el-row>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="salary" label="薪水">
                             <el-input v-model="addModel.salary"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 角色（仅编辑显示） -->
-                <el-row v-if="addModel.type != EditType.ADD">
-                    <el-col :span="24" :offset="0">
-                        <el-form-item prop="roleId" label="角色">
-                            <el-select v-model="addModel.roleId" class="m-2" placeholder="请选择角色" size="default">
-                                <el-option v-for="item in roleData.list" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                <!-- 角色字段移除：类型即为角色选择 -->
             </el-form>
         </template>
     </SysDialog>
@@ -124,7 +113,7 @@ const { dialog, onClose, onShow } = useDialog();
 const show = async (type: string, row?: AddUserModel) => {
     roleId.value = "";
     addModel.roleId = "";
-    dialog.height = 270;
+    dialog.height = 280;
     addModel.type = type;
     // 获取角色数据列表
     await listRole();
@@ -141,8 +130,8 @@ const show = async (type: string, row?: AddUserModel) => {
         });
     }
     onShow();
-    // 重置表单验证状态
-    addFormRef.value?.resetFields();
+    // 新增时重置表单验证状态；编辑时保留回显数据
+    if (type == EditType.ADD) addFormRef.value?.resetFields();
 };
 
 /** 暴露show方法给父组件使用 */
@@ -174,7 +163,6 @@ const addModel = reactive<AddUserModel>({
     phone: "",
     email: "",
     sex: "",
-    userType: "",
     status: "",
     salary: "",
     nickName: "",
@@ -202,13 +190,7 @@ const rules = reactive({
             message: "请选择性别",
         },
     ],
-    userType: [
-        {
-            required: true,
-            trigger: "change",
-            message: "请选择类型",
-        },
-    ],
+    // 用户类型移除；类型即为角色选择
     status: [
         {
             required: true,
@@ -241,11 +223,7 @@ const rules = reactive({
     roleId: [
         {
             validator: (_rule: any, value: string, callback: (e?: Error) => void) => {
-                if (addModel.type === EditType.ADD) {
-                    callback();
-                } else {
-                    if (!value) callback(new Error("请选择角色")); else callback();
-                }
+                if (!value) callback(new Error("请选择角色")); else callback();
             },
             trigger: "change",
         },
@@ -279,5 +257,7 @@ const commit = () => {
         }
     });
 };
+
+// 移除类型联动过滤与自动同步逻辑，类型直接对应所选角色
 </script>
 <style scoped></style>

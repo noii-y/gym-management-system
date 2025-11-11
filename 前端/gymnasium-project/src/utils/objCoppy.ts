@@ -26,10 +26,15 @@
 export default function objCoppy(obj1: any, obj2: any): void {
   // 参数验证：确保两个参数都存在
   if (!obj1 || !obj2) return;
-  
-  // 遍历目标对象的所有属性
-  Object.keys(obj2).forEach(key => {
-    // 将源对象对应属性的值赋给目标对象
-    obj2[key] = obj1[key]
-  })
+
+  // 遍历目标对象的所有属性，仅在源对象存在且值不为undefined时复制，避免覆盖默认值
+  Object.keys(obj2).forEach((key) => {
+    if (
+      Object.prototype.hasOwnProperty.call(obj1, key) &&
+      obj1[key] !== undefined &&
+      obj1[key] !== null
+    ) {
+      obj2[key] = obj1[key];
+    }
+  });
 }

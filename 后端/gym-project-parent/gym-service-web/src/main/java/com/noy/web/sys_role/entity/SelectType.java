@@ -27,4 +27,9 @@ public class SelectType {
      * 显示标签
      */
     private String label;
+
+    /**
+     * 角色类型（1：员工类型 2：会员类型）
+     */
+    private String types;
 }

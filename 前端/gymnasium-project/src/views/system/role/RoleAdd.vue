@@ -11,8 +11,8 @@
           <el-input v-model="addModel.roleName"></el-input>
         </el-form-item>
         <!-- 角色类型选择器 -->
-        <el-form-item prop="roleName" label="角色类型">
-          <el-select style="width: 100%" v-model="addModel.type" class="m-2" placeholder="请选择角色类型" size="default">
+        <el-form-item prop="types" label="角色类型">
+          <el-select style="width: 100%" v-model="addModel.types" class="m-2" placeholder="请选择角色类型" size="default">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -45,15 +45,20 @@ const { global } = useInstance();
 /** 表单的ref引用，用于表单验证 */
 const addFormRef = ref<FormInstance>();
 
+/**
+ * 操作类型（仅用于前端区分新增/编辑），避免与表单中的角色类型字段混淆
+ */
+const opType = ref<string>("");
+
 /** 
  * 角色表单数据模型
- * @property {string} type - 操作类型（新增/编辑）
+ * @property {string} types - 角色类型（1：员工类型 2：会员类型）
  * @property {string} roleId - 角色ID
  * @property {string} roleName - 角色名称
  * @property {string} remark - 角色备注
  */
 const addModel = reactive<AddRoleModel>({
-  type: "",
+  types: "",
   roleId: "",
   roleName: "",
   remark: "",
@@ -84,16 +89,26 @@ const show = (type: string, row?: AddRoleModel) => {
   dialog.width = 630;
   // 根据操作类型设置弹框标题
   type == EditType.ADD ? (dialog.title = Title.ADD) : (dialog.title = Title.EDIT);
-  // 如果是编辑操作，需要回显数据到表单
-  if (type == EditType.EDIT) {
-    nextTick(() => {
-      global.$objCoppy(row, addModel);
-    });
-  }
-  // 设置操作类型标识
-  addModel.type = type;
+  // 记录当前操作类型（新增/编辑），不要污染表单中的角色类型字段
+  opType.value = type;
+  // 先显示弹框
   dialog.visible = true;
-  addFormRef.value?.resetFields();
+  // 新增：重置表单，清空为默认值
+  if (type == EditType.ADD) {
+    addFormRef.value?.resetFields();
+    return;
+  }
+  // 编辑：回显数据到表单，并兼容历史字段名
+  nextTick(() => {
+    if (row) {
+      global.$objCoppy(row, addModel);
+      // 兼容后端或历史数据的字段差异：type -> types
+      // 如果row.types未定义，但存在row.type，则回填
+      if ((row as any)?.types === undefined && (row as any)?.type !== undefined) {
+        addModel.types = (row as any).type as string;
+      }
+    }
+  });
 };
 
 /** 暴露show方法给父组件使用 */
@@ -110,6 +125,13 @@ const rules = reactive({
       message: "请填写角色名称",
     },
   ],
+  types: [
+    {
+      required: true,
+      trigger: "change",
+      message: "请选择角色类型",
+    },
+  ],
 });
 
 /** 定义组件事件，用于通知父组件刷新列表 */
@@ -124,7 +146,8 @@ const commit = () => {
   addFormRef.value?.validate(async (valid) => {
     if (valid) {
       let res = null;
-      if (addModel.type == EditType.ADD) {
+      // 依据操作类型（opType）判断走新增还是编辑
+      if (opType.value == EditType.ADD) {
         // 调用新增API
         res = await addApi(addModel);
       } else {
