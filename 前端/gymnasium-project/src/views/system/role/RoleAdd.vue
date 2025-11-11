@@ -93,19 +93,18 @@ const show = (type: string, row?: AddRoleModel) => {
   opType.value = type;
   // 先显示弹框
   dialog.visible = true;
-  // 新增：重置表单，清空为默认值
+  // 打开弹窗时，先重置表单，避免上一次编辑残留导致类型随机变化
+  addFormRef.value?.resetFields();
   if (type == EditType.ADD) {
-    addFormRef.value?.resetFields();
     return;
   }
   // 编辑：回显数据到表单，并兼容历史字段名
   nextTick(() => {
     if (row) {
       global.$objCoppy(row, addModel);
-      // 兼容后端或历史数据的字段差异：type -> types
-      // 如果row.types未定义，但存在row.type，则回填
-      if ((row as any)?.types === undefined && (row as any)?.type !== undefined) {
-        addModel.types = (row as any).type as string;
+      // 统一将类型转为字符串，避免后端返回数字导致下拉回显不正确
+      if ((addModel as any)?.types !== undefined && (addModel as any)?.types !== null) {
+        addModel.types = String((addModel as any).types);
       }
     }
   });

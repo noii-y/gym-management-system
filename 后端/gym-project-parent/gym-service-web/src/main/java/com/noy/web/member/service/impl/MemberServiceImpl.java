@@ -20,6 +20,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 // 项目内部类
 import com.noy.web.member.entity.JoinParam;
@@ -33,6 +35,7 @@ import com.noy.web.member_card.entity.MemberCard;
 import com.noy.web.member_card.mapper.MemberCardMapper;
 import com.noy.web.member_recharge.entity.MemberRecharge;
 import com.noy.web.member_recharge.service.MemberRechargeService;
+import com.noy.web.sys_user.entity.SysUser;
 import com.noy.web.member_role.entity.MemberRole;
 import com.noy.web.member_role.service.MemberRoleService;
 
@@ -244,6 +247,21 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         MemberRecharge recharge = new MemberRecharge();
         recharge.setMemberId(param.getMemberId());
         recharge.setMoney(param.getMoney());
+        // 写入操作人和充值时间
+        String operator = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() != null) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof Member) {
+                Member user = (Member) principal;
+                operator = user.getUsername() != null ? user.getUsername() : user.getName();
+            } else if (principal instanceof SysUser) {
+                SysUser user = (SysUser) principal;
+                operator = user.getNickName() != null ? user.getNickName() : user.getUsername();
+            }
+        }
+        recharge.setCreateUser(operator);
+        recharge.setCreateTime(new Date());
         
         boolean save = memberRechargeService.save(recharge);
         if (save) {

@@ -104,17 +104,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      */
     @Override
     public RolePermissionVo getMenuTree(RoleAssignParam param) {
-        // 查询用户信息
-        SysUser user = sysUserService.getById(param.getUserId());
-        List<SysMenu> list = null;
-        
-        if (StringUtils.isNotEmpty(user.getIsAdmin()) && user.getIsAdmin().equals("1")) {
-            // 超级管理员，直接查询所有的菜单信息
-            list = sysMenuService.list();
-        } else {
-            // 普通用户，查询其权限范围内的菜单
-            list = sysMenuService.getMenuByUserId(user.getUserId());
-        }
+        // 分配权限场景：始终返回系统全部菜单，确保新增/删除菜单能即时在权限树中呈现
+        // 说明：原逻辑基于当前用户权限过滤，导致非超级管理员无法看到新菜单，难以为其他角色分配。
+        // 这里统一改为查询全部菜单，提升可用性。
+        List<SysMenu> list = sysMenuService.list();
         
         // 组装树形数据
         List<SysMenu> menuList = MakeMenuTree.makeTree(list, 0L);

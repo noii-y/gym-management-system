@@ -31,7 +31,8 @@ import AddCard from '@/views/member/AddCard.vue'
 import AddMember from '@/views/member/AddMember.vue'
 import CardType from '@/views/member/CardType.vue'
 import MemberList from '@/views/member/MemberList.vue'
-import MyFee from '@/views/member/MyFee.vue'
+import RechargeRecord from '@/views/member/RechargeRecord.vue'
+import MyRecharge from '@/views/member/MyRecharge.vue'
 import JoinApply from '@/views/member/list/JoinApply.vue'
 import Recharge from '@/views/member/list/Recharge.vue'
 // 我的课程
@@ -72,8 +73,11 @@ const componentMap: Record<string, any> = {
   '/member/type/CardType': CardType,
   '/member/MemberList': MemberList,
   '/member/list/MemberList': MemberList,
-  '/member/MyFee': MyFee,
-  '/member/fee/MyFee': MyFee,
+  '/member/MyFee': RechargeRecord,
+  '/member/fee/MyFee': RechargeRecord,
+  // 新增“我的充值”兼容路径映射
+  '/member/MyRecharge': MyRecharge,
+  '/member/fee/MyRecharge': MyRecharge,
   '/member/list/JoinApply': JoinApply,
   '/member/list/Recharge': Recharge,
   '/mycourse/mycourse': MyCourse,
@@ -121,7 +125,19 @@ export const menuStore = defineStore('menuStore', {
      * @returns RouteRecordRaw[] 菜单路由列表
      */
     getMenuList(state: MenuState): RouteRecordRaw[] {
-      return state.menuList
+      // 读取时兼容旧菜单项，将 /myFee 的标题替换为“充值记录”
+      const fixTitle = (route: any): any => {
+        const tmp = { ...route }
+        if (tmp && typeof tmp.path === 'string' && tmp.path === '/myFee') {
+          tmp.meta = tmp.meta || {}
+          tmp.meta.title = '充值记录'
+        }
+        if (tmp.children && tmp.children.length > 0) {
+          tmp.children = tmp.children.map((child: any) => fixTitle(child))
+        }
+        return tmp
+      }
+      return (state.menuList || []).map((r: any) => fixTitle(r))
     }
   },
   
@@ -210,6 +226,16 @@ export function generateRoutes(routes: RouteRecordRaw[], router: Router): RouteR
         }
         tmp.component = mapped
       }
+    }
+    // 兼容旧菜单标题：将 MyFee 的显示名统一替换为“充值记录”
+    if (component === '/member/MyFee' || component === '/member/fee/MyFee' || tmp.path === '/myFee') {
+      tmp.meta = tmp.meta || {}
+      tmp.meta.title = '充值记录'
+    }
+    // 新增：确保 /myRecharge 使用“我的充值”标题
+    if (component === '/member/MyRecharge' || component === '/member/fee/MyRecharge' || tmp.path === '/myRecharge') {
+      tmp.meta = tmp.meta || {}
+      tmp.meta.title = '我的充值'
     }
     
     // 如果存在子路由，递归处理

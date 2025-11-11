@@ -310,7 +310,8 @@ public class MemberController {
         // if(pageParam.getMemberId() != null){
         //     query.lambda().eq(MemberRecharge::getMemberId, pageParam.getMemberId());
         // }
-        query.lambda().orderByDesc(MemberRecharge::getCreateTime);
+        // 改为按时间正序排列（时间越早越靠前）
+        query.lambda().orderByAsc(MemberRecharge::getCreateTime);
         
         IPage<MemberRecharge> list = memberRechargeService.page(page, query);
         return ResultUtils.success("查询成功", list);

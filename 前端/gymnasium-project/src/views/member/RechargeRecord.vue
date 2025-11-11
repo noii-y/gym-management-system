@@ -10,8 +10,12 @@
       <el-table-column label="会员卡号" prop="username"></el-table-column>
       <el-table-column label="会员姓名" prop="name"></el-table-column>
       <el-table-column label="充值金额" prop="money"></el-table-column>
-      <el-table-column label="充值时间" prop="createTime"></el-table-column>
-      <el-table-column label="操作人" prop="createUser"></el-table-column>
+      <el-table-column label="充值时间" prop="createTime">
+        <template #default="{ row }">{{ formatTime(row.createTime) }}</template>
+      </el-table-column>
+      <el-table-column label="操作人" prop="createUser">
+        <template #default="{ row }">{{ row.createUser || '-' }}</template>
+      </el-table-column>
     </el-table>
     
     <!-- 分页组件 -->
@@ -154,6 +158,14 @@ const waitForUserReady = async () => {
       }
     }, 100);
   });
+};
+
+// 统一时间格式化为：YYYY-MM-DD HH:mm:ss
+const formatTime = (val: any) => {
+  if (!val) return '';
+  const d = new Date(val);
+  const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 };
 </script>
 

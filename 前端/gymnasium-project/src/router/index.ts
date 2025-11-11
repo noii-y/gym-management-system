@@ -133,11 +133,23 @@ export const constantRoutes: Array<RouteRecordRaw> = [
           roles: ["sys:memberList"]
         }
       },
-      // 会员充值管理
+      // 充值记录（原“我的充值”重命名），保留原角色码避免权限不匹配
       {
         path: "/myFee",
-        component: () => import('@/views/member/MyFee.vue'),
+        component: () => import('@/views/member/RechargeRecord.vue'),
         name: "myFee",
+        meta: {
+          title: "充值记录",
+          icon: "Wallet",
+          roles: ["sys:myFee"]
+        }
+      }
+      ,
+      // 我的充值（仅展示当前会员的充值历史）
+      {
+        path: "/myRecharge",
+        component: () => import('@/views/member/MyRecharge.vue'),
+        name: "myRecharge",
         meta: {
           title: "我的充值",
           icon: "Wallet",

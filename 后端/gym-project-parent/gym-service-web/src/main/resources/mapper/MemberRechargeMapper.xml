@@ -5,16 +5,32 @@
 
     <select id="getRecherList"
             resultType="com.noy.web.member_recharge.entity.MemberRecharge">
-        SELECT mr.*, m.`name`, m.username
+        SELECT 
+            mr.recharge_id AS rechargeId,
+            mr.member_id   AS memberId,
+            mr.money       AS money,
+            mr.create_time AS createTime,
+            mr.create_user AS createUser,
+            m.`name`       AS name,
+            m.username     AS username
         FROM member_recharge AS mr
                  LEFT JOIN member AS m ON m.member_id = mr.member_id
+        ORDER BY (mr.create_time IS NULL) ASC, mr.create_time DESC, mr.recharge_id ASC
     </select>
 
     <select id="getRecherByMember" parameterType="long"
             resultType="com.noy.web.member_recharge.entity.MemberRecharge">
-        SELECT mr.*, m.`name`, m.username
+        SELECT 
+            mr.recharge_id AS rechargeId,
+            mr.member_id   AS memberId,
+            mr.money       AS money,
+            mr.create_time AS createTime,
+            mr.create_user AS createUser,
+            m.`name`       AS name,
+            m.username     AS username
         FROM member_recharge AS mr
                  LEFT JOIN member AS m ON m.member_id = mr.member_id
         WHERE m.member_id = #{memberId}
+        ORDER BY (mr.create_time IS NULL) ASC, mr.create_time DESC, mr.recharge_id ASC
     </select>
 </mapper>

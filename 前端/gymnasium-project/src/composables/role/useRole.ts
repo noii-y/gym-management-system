@@ -54,7 +54,7 @@ export default function useRole(getList: FuncList) {
    * @param row 要删除的角色数据
    */
   const deleteBtn = async (row: AddRoleModel) => {
-    let confirm = await global.$myConfirm("确认删除该数据吗？")
+    const confirm = await global.$myconfirm('确定删除该数据吗?')
     if (confirm) {
       let res = await deleteApi(row.roleId)
       if (res && res.code == 200) {
