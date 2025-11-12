@@ -16,6 +16,7 @@ import { type InfoParam } from "@/api/login/LoginModel";
 // 课程管理
 import AddCourse from '@/views/course/AddCourse.vue'
 import CourseList from '@/views/course/CourseList.vue'
+import TeachingList from '@/views/course/TeachingList.vue'
 // 商品管理
 import AddGoods from '@/views/goods/AddGoods.vue'
 import GoodsList from '@/views/goods/GoodsList.vue'
@@ -59,6 +60,7 @@ import UserList from '@/views/system/user/UserList.vue'
 const componentMap: Record<string, any> = {
   '/course/AddCourse': AddCourse,
   '/course/CourseList': CourseList,
+  '/course/TeachingList': TeachingList,
   '/goods/AddGoods': AddGoods,
   '/goods/GoodsList': GoodsList,
   '/lost/AddLost': AddLost,
@@ -82,6 +84,11 @@ const componentMap: Record<string, any> = {
   '/member/list/Recharge': Recharge,
   '/mycourse/mycourse': MyCourse,
   '/order/OrderList': OrderList,
+  // 课程订单：兼容后端可能配置的不同组件路径写法
+  '/course/OrderList': OrderList,
+  // 旧数据中的课程订单组件路径（数据库 url 为 '/course/Order'）
+  '/course/Order': OrderList,
+  '/courseOrder': OrderList,
   '/suggest/AddSuggest': AddSuggest,
   '/suggest/SuggestList': SuggestList,
   '/system/AssignRole': AssignRole,
@@ -236,6 +243,21 @@ export function generateRoutes(routes: RouteRecordRaw[], router: Router): RouteR
     if (component === '/member/MyRecharge' || component === '/member/fee/MyRecharge' || tmp.path === '/myRecharge') {
       tmp.meta = tmp.meta || {}
       tmp.meta.title = '我的充值'
+      // 标注仅会员角色适用，供前端可见性控制与路由守卫参考
+      tmp.meta.role = '会员'
+    }
+    // 新增：课程管理三子菜单的前端可见性标注
+    if (component === '/course/CourseList' || tmp.path === '/courseList') {
+      tmp.meta = tmp.meta || {}
+      tmp.meta.role = '员工'
+    }
+    if (component === '/mycourse/mycourse' || tmp.path === '/myCourse') {
+      tmp.meta = tmp.meta || {}
+      tmp.meta.role = '会员'
+    }
+    if (component === '/course/TeachingList' || tmp.path === '/myTeaching') {
+      tmp.meta = tmp.meta || {}
+      tmp.meta.role = '教练'
     }
     
     // 如果存在子路由，递归处理

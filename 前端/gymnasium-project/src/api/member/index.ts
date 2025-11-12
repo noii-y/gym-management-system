@@ -79,3 +79,13 @@ export const rechargeApi = (param: Recharge) => {
 export const getMyRechargeApi = (param: any) => {
   return http.get("/api/member/getMyRecharge", param)
 }
+
+/**
+ * 查询充值记录（员工视角）
+ * 独立于“我的充值”，仅用于员工查看所有会员充值记录
+ * @param param 分页参数 { currentPage, pageSize }
+ * @returns Promise 充值记录分页列表
+ */
+export const getRechargeListApi = (param: { currentPage: number; pageSize: number }) => {
+  return http.get("/api/member/myRecharge", param)
+}

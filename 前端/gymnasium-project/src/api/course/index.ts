@@ -46,7 +46,16 @@ export const listApi = (param: CourselistParam) => {
  * @returns Promise 我的课程列表数据
  */
 export const getMyCourseListApi = (param: MyCourseListParam) => {
-  return http.get("/api/course/list", param)
+  return http.get("/api/course/getMyCourseList", param)
+}
+
+/**
+ * 导出课程学生（教练）
+ * @param courseId 课程ID
+ * @returns Promise 导出内容（CSV字符串或文件流）
+ */
+export const exportStudentsApi = (courseId: number | string) => {
+  return http.get("/api/course/exportStudents", { courseId })
 }
 
 /**

@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 // Spring框架
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import java.util.List;
 
 // 项目内部工具类
 import com.noy.utils.ResultUtils;
@@ -222,5 +224,41 @@ public class CourseController {
         query.lambda().eq(Course::getTeacherId, param.getUserId());
         IPage<Course> list = courseService.page(page, query);
         return ResultUtils.success("查询成功", list);
+}
+    /**
+     * 导出课程学生（教练权限）
+     * 返回CSV字符串，前端保存为文件
+     */
+    @GetMapping("/exportStudents")
+    @PreAuthorize("hasAnyAuthority('sys:myTeaching:export')")
+    public ResultVo exportStudents(@RequestParam Long courseId) {
+        // 查询该课程的所有报名记录
+        QueryWrapper<MemberCourse> query = new QueryWrapper<>();
+        query.lambda().eq(MemberCourse::getCourseId, courseId);
+        List<MemberCourse> list = memberCourseService.list(query);
+
+        // 组装CSV内容
+        StringBuilder sb = new StringBuilder();
+        sb.append("会员ID,姓名,手机,课程名称,教练,报名记录ID\n");
+        for (MemberCourse mc : list) {
+            Member mem = memberService.getById(mc.getMemberId());
+            String name = mem != null ? mem.getName() : "";
+            String phone = mem != null ? mem.getPhone() : "";
+            sb.append(mc.getMemberId()).append(',')
+              .append(escapeCsv(name)).append(',')
+              .append(escapeCsv(phone)).append(',')
+              .append(escapeCsv(mc.getCourseName())).append(',')
+              .append(escapeCsv(mc.getTeacherName())).append(',')
+              .append(mc.getMemberCourseId()).append('\n');
+        }
+
+        return ResultUtils.success("导出成功", sb.toString());
+    }
+
+    private String escapeCsv(String s) {
+        if (s == null) return "";
+        boolean needsQuote = s.contains(",") || s.contains("\n") || s.contains("\r") || s.contains("\"");
+        String escaped = s.replace("\"", "\"\"");
+        return needsQuote ? "\"" + escaped + "\"" : escaped;
     }
 }

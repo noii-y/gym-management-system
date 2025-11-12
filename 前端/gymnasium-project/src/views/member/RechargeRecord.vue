@@ -39,7 +39,7 @@
  */
 import type { MemberRecharge } from "@/api/member/MemberModel";
 import { nextTick, onMounted, reactive, ref, onBeforeUnmount, onActivated } from "vue";
-import { getMyRechargeApi } from "@/api/member";
+import { getRechargeListApi } from "@/api/member";
 import { userStore } from "@/store/user";
 import { ElMessage } from "element-plus";
 
@@ -54,15 +54,12 @@ const tableHeight = ref(0);
 const store = userStore();
 
 /**
- * 表格查询参数
- * 包含分页信息和用户身份信息
+ * 表格查询参数（仅分页信息，后端基于令牌判断员工权限）
  */
 const listParam = reactive<MemberRecharge>({
   currentPage: 1,    // 当前页码
   pageSize: 10,      // 每页显示数量
   total: 0,          // 总记录数
-  memberId: "",      // 会员ID
-  userType: "",      // 用户类型
 });
 
 /**
@@ -74,23 +71,25 @@ const tableData = reactive({
 });
 
 /**
- * 获取充值记录列表数据
- * 根据当前登录用户信息获取其充值历史记录
+ * 获取充值记录列表数据（员工视角）
+ * 仅分页传参，后端通过令牌校验员工角色
  */
 const getList = async () => {
   try {
     await waitForUserReady();
-    // 设置查询参数为当前登录用户信息
-    listParam.memberId = store.getUserId;
-    listParam.userType = store.getUserType;
-
-    const res = await getMyRechargeApi(listParam);
+    const res = await getRechargeListApi({
+      currentPage: listParam.currentPage,
+      pageSize: listParam.pageSize,
+    });
     if (res && res.code == 200) {
       tableData.list = res.data.records;
       listParam.total = res.data.total;
     } else {
       // 失败重试一次，提升首屏稳定性
-      const retry = await getMyRechargeApi(listParam);
+      const retry = await getRechargeListApi({
+        currentPage: listParam.currentPage,
+        pageSize: listParam.pageSize,
+      });
       if (retry && retry.code == 200) {
         tableData.list = retry.data.records;
         listParam.total = retry.data.total;

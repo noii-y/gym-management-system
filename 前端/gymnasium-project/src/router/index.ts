@@ -153,7 +153,9 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "我的充值",
           icon: "Wallet",
-          roles: ["sys:myFee"]
+          roles: ["sys:myFee"],
+          // 仅会员角色可见与访问的标识（前端可见性控制，后端兜底空数据）
+          role: "会员"
         }
       }
     ]
@@ -178,7 +180,9 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "课程列表",
           icon: "Document",
-          roles: ["sys:courseList"]
+          roles: ["sys:courseList"],
+          // 仅员工可见（前端可见性标识，后端做数据权限）
+          role: "员工"
         }
       },
       // 个人课程管理
@@ -189,7 +193,22 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: "我的课程",
           icon: "User",
-          roles: ["sys:myCourse"]
+          roles: ["sys:myCourse"],
+          // 仅会员可见
+          role: "会员"
+        }
+      },
+      // 我的授课（占位，功能暂缓）
+      {
+        path: "/myTeaching",
+        component: () => import('@/views/course/TeachingList.vue'),
+        name: "myTeaching",
+        meta: {
+          title: "我的授课",
+          icon: "Notebook",
+          roles: ["sys:myTeaching"],
+          // 仅教练可见
+          role: "教练"
         }
       },
       // 课程订单管理

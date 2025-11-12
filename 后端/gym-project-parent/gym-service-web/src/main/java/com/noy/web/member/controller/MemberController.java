@@ -30,6 +30,12 @@ import com.noy.web.member_recharge.entity.MemberRecharge;
 import com.noy.web.member_recharge.service.MemberRechargeService;
 import com.noy.web.member_role.entity.MemberRole;
 import com.noy.web.member_role.service.MemberRoleService;
+// JWT 解析
+import com.noy.jwt.JwtUtils;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.Claim;
+// Web 请求
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 会员管理控制器
@@ -81,6 +87,9 @@ public class MemberController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     // ==================== 会员基础管理接口 ====================
 
@@ -299,21 +308,33 @@ public class MemberController {
      * @return 充值记录列表
      */
     @GetMapping("/myRecharge")
-    public ResultVo myRecharge(PageParam pageParam) {
-        // 构造分页对象
-        IPage<MemberRecharge> page = new Page<>(
-                pageParam.getCurrentPage(), pageParam.getPageSize());
-        
-        // 构造查询条件
-        QueryWrapper<MemberRecharge> query = new QueryWrapper<>();
-        // 这里可以根据需要添加会员ID过滤条件
-        // if(pageParam.getMemberId() != null){
-        //     query.lambda().eq(MemberRecharge::getMemberId, pageParam.getMemberId());
-        // }
-        // 改为按时间正序排列（时间越早越靠前）
-        query.lambda().orderByAsc(MemberRecharge::getCreateTime);
-        
-        IPage<MemberRecharge> list = memberRechargeService.page(page, query);
+    public ResultVo myRecharge(HttpServletRequest request, RechargeParamList pageParam) {
+        // 解析令牌，限定仅员工(userType == "2")可查询全部充值记录
+        String token = request.getHeader("token");
+        if (StringUtils.isEmpty(token)) {
+            String auth = request.getHeader("Authorization");
+            if (!StringUtils.isEmpty(auth) && auth.toLowerCase().startsWith("bearer ")) {
+                token = auth.substring(7).trim();
+            }
+        }
+
+        if (StringUtils.isEmpty(token)) {
+            IPage<MemberRecharge> empty = new Page<>(pageParam.getCurrentPage(), pageParam.getPageSize());
+            return ResultUtils.success("查询成功", empty);
+        }
+
+        DecodedJWT decodedJWT = jwtUtils.jwtDecode(token);
+        Claim userTypeClaim = decodedJWT.getClaim("userType");
+        String userType = userTypeClaim.isNull() ? null : userTypeClaim.asString();
+
+        if (!"2".equals(userType)) {
+            // 非员工返回空分页，确保与“我的充值”相互独立
+            IPage<MemberRecharge> empty = new Page<>(pageParam.getCurrentPage(), pageParam.getPageSize());
+            return ResultUtils.success("查询成功", empty);
+        }
+
+        // 员工查询所有充值记录（按时间倒序）
+        IPage<MemberRecharge> list = memberRechargeService.getRecherList(pageParam);
         return ResultUtils.success("查询成功", list);
     }
 
@@ -330,19 +351,46 @@ public class MemberController {
      * @return 充值记录查询结果
      */
     @GetMapping("/getMyRecharge")
-    public ResultVo getMyRecharge(RechargeParamList param) {
-        // 判断是会员还是员工
-        if (param.getUserType().equals("1")) {
-            // 会员查询自己的充值记录
-            IPage<MemberRecharge> list = memberRechargeService.getRecherByMember(param);
-            return ResultUtils.success("查询成功", list);
-        } else if (param.getUserType().equals("2")) {
-            // 员工查询所有充值记录
-            IPage<MemberRecharge> list = memberRechargeService.getRecherList(param);
-            return ResultUtils.success("查询成功", list);
-        } else {
-            return ResultUtils.error("用户类型不存在!");
+    public ResultVo getMyRecharge(HttpServletRequest request, RechargeParamList param) {
+        // 优先从请求头中解析 token（兼容 Authorization: Bearer xxx 与 token 两种方式）
+        String token = request.getHeader("token");
+        if (StringUtils.isEmpty(token)) {
+            String auth = request.getHeader("Authorization");
+            if (!StringUtils.isEmpty(auth) && auth.toLowerCase().startsWith("bearer ")) {
+                token = auth.substring(7).trim();
+            }
         }
+
+        // 没有令牌直接返回空数据，避免越权（理论上过滤器已拦截）
+        if (StringUtils.isEmpty(token)) {
+            IPage<MemberRecharge> empty = new Page<>(param.getCurrentPage(), param.getPageSize());
+            return ResultUtils.success("查询成功", empty);
+        }
+
+        // 解析令牌，获取用户类型与用户名
+        DecodedJWT decodedJWT = jwtUtils.jwtDecode(token);
+        Claim userTypeClaim = decodedJWT.getClaim("userType");
+        Claim usernameClaim = decodedJWT.getClaim("username");
+        String userType = userTypeClaim.isNull() ? null : userTypeClaim.asString();
+        String username = usernameClaim.isNull() ? null : usernameClaim.asString();
+
+        // 仅会员（userType == "1"）返回其自身充值记录；其他类型统一返回空数据
+        if (!"1".equals(userType) || StringUtils.isEmpty(username)) {
+            IPage<MemberRecharge> empty = new Page<>(param.getCurrentPage(), param.getPageSize());
+            return ResultUtils.success("查询成功", empty);
+        }
+
+        // 根据用户名定位会员ID，绑定查询参数，忽略前端传入的 memberId
+        Member member = memberService.loadUser(username);
+        if (member == null || member.getMemberId() == null) {
+            IPage<MemberRecharge> empty = new Page<>(param.getCurrentPage(), param.getPageSize());
+            return ResultUtils.success("查询成功", empty);
+        }
+        param.setMemberId(member.getMemberId());
+
+        // 执行按会员ID的分页查询
+        IPage<MemberRecharge> list = memberRechargeService.getRecherByMember(param);
+        return ResultUtils.success("查询成功", list);
     }
 
 }
