@@ -21,34 +21,9 @@ export default function useAssign() {
         if (res && res.code === 200) {
             // 设置权限树数据
             assignTreeData.list = res.data.listmenu;
-            // 设置角色原来的权限Id
-            assignTreeData.assignTreeChecked = res.data.checkList;
-
-            // 数据回显，判断角色原来是否已经分配过权限，如果有，回显
-            if (assignTreeData.assignTreeChecked.length > 0) {
-                let newArr: number[] = [];
-                assignTreeData.assignTreeChecked.forEach((id) => {
-                    checked(id, assignTreeData.list, newArr);
-                });
-                assignTreeData.assignTreeChecked = newArr;
-            }
+            // 直接使用后端返回的勾选集合，统一转成 number 与 node-key 对齐
+            assignTreeData.assignTreeChecked = (res.data.checkList || []).map((id: any) => Number(id));
         }
-    };
-
-    // 递归检查权限
-    const checked = (id: number, data: any[], newArr: number[]) => {
-        data.forEach((item: any) => {
-            if (item.menuId === id) {
-                if (item.children && item.children.length === 0) {
-                    newArr.push(item.menuId);
-                }
-            } else {
-                if (item.children && item.children.length > 0) {
-                    // 递归调用
-                    checked(id, item.children, newArr);
-                }
-            }
-        });
     };
 
     return {

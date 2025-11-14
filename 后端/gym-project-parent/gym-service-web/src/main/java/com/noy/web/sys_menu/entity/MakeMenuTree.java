@@ -68,21 +68,19 @@ public class MakeMenuTree {
                 .filter(item -> item != null &&
                         item.getParentId().equals(pid))
                 .forEach(item ->{
+                    List<RouterVO> children = makeRourer(menuList, item.getMenuId());
+                    if ("0".equals(item.getType()) && (children == null || children.isEmpty())) {
+                        return;
+                    }
                     RouterVO router = new RouterVO();
                     router.setName(item.getName());
                     router.setPath(item.getPath());
-                    // 设置children 递归调用：自己调用自己
-                    List<RouterVO> children =
-                            makeRourer(menuList, item.getMenuId());
                     router.setChildren(children);
-                    if(item.getParentId() == 0L){// 如果是上级是0,那么他的component是Layout
+                    if(item.getParentId() == 0L){
                         router.setComponent("Layout");
-                        // 判断该数据是目录还是菜单
-                        if(item.getType().equals("1")){ // 如果一级菜单是 菜单类型，单独处理
+                        if(item.getType().equals("1")){
                             router.setRedirect(item.getPath());
-                            // 菜单需要设置children
-                            List<RouterVO> listChild = new
-                                    ArrayList<>();
+                            List<RouterVO> listChild = new ArrayList<>();
                             RouterVO child  = new RouterVO();
                             child.setName(item.getName());
                             child.setPath(item.getPath());
@@ -94,9 +92,7 @@ public class MakeMenuTree {
                             ));
                             listChild.add(child);
                             router.setChildren(listChild);
-                            router.setPath(item.getPath()
-                                    +"parent");
-
+                            router.setPath(item.getPath()+"parent");
                             router.setName(item.getName()+"parent");
                         }
                     }else{

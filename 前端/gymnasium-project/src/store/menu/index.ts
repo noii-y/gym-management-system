@@ -17,6 +17,7 @@ import { type InfoParam } from "@/api/login/LoginModel";
 import AddCourse from '@/views/course/AddCourse.vue'
 import CourseList from '@/views/course/CourseList.vue'
 import TeachingList from '@/views/course/TeachingList.vue'
+import CourseOrderList from '@/views/course/CourseOrderList.vue'
 // 商品管理
 import AddGoods from '@/views/goods/AddGoods.vue'
 import GoodsList from '@/views/goods/GoodsList.vue'
@@ -85,10 +86,10 @@ const componentMap: Record<string, any> = {
   '/mycourse/mycourse': MyCourse,
   '/order/OrderList': OrderList,
   // 课程订单：兼容后端可能配置的不同组件路径写法
-  '/course/OrderList': OrderList,
+  '/course/OrderList': CourseOrderList,
   // 旧数据中的课程订单组件路径（数据库 url 为 '/course/Order'）
-  '/course/Order': OrderList,
-  '/courseOrder': OrderList,
+  '/course/Order': CourseOrderList,
+  '/courseOrder': CourseOrderList,
   '/suggest/AddSuggest': AddSuggest,
   '/suggest/SuggestList': SuggestList,
   '/system/AssignRole': AssignRole,

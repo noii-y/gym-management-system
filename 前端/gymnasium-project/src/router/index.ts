@@ -214,7 +214,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
       // 课程订单管理
       {
         path: "/courseOrder",
-        component: () => import('@/views/order/OrderList.vue'),
+        component: () => import('@/views/course/CourseOrderList.vue'),
         name: "courseOrder",
         meta: {
           title: "课程订单",
