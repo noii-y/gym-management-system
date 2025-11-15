@@ -88,6 +88,8 @@ public class SysUser implements UserDetails {
      * 用户类型（1：员工，2：教练）
      */
     private String userType;
+
+    private String coachType;
     
     /**
      * 状态（0：停用，1：启用）

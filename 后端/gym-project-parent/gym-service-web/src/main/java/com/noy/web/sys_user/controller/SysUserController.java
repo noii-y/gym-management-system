@@ -162,7 +162,7 @@ public class SysUserController {
     @GetMapping("/getTeacher")
     public ResultVo getTeacher(){
         QueryWrapper<SysUser> query = new QueryWrapper<>();
-        query.lambda().eq(SysUser::getUserType,"2");
+        query.lambda().eq(SysUser::getUserType,"2").eq(SysUser::getCoachType, "课程教练");
         List<SysUser> list = sysUserService.list(query);
         //组装后的select数据
         List<SelectType> selectTypeList = new ArrayList<>();

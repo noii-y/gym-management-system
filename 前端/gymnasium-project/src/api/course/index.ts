@@ -67,6 +67,10 @@ export const editApi = (param: CourseType) => {
   return http.put("/api/course", param)
 }
 
+export const unassignTeacherApi = (courseId: number | string) => {
+  return http.put(`/api/course/unassignTeacher/${courseId}`)
+}
+
 /**
  * 删除课程
  * @param courseId 课程ID

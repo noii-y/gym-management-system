@@ -35,7 +35,12 @@
             <el-table-column prop="courseName" label="课程名称" />
             <el-table-column prop="courseHour" label="课时" />
             <el-table-column prop="coursePrice" label="价格" />
-            <el-table-column prop="teacherName" label="授课教师" />
+            <el-table-column prop="teacherName" label="授课教师">
+                <template #default="scope">
+                    <span v-if="scope.row.teacherName">{{ scope.row.teacherName }}</span>
+                    <span v-else>暂无授课人</span>
+                </template>
+            </el-table-column>
 
             <el-table-column label="操作" width="290" align="center">
                 <template #default="scope">

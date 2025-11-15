@@ -11,7 +11,7 @@
  Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 14/11/2025 18:06:54
+ Date: 15/11/2025 16:20:17
 */
 
 SET NAMES utf8mb4;
@@ -888,14 +888,8 @@ CREATE TABLE `sys_user`  (
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user` VALUES (1, 'zs001', '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme', '18687116223', '2383404558@qq.com', '0', 5000.00, '1', '1', '0', 1, 1, 1, 1, '张三', '2025-06-11 23:11:00', '2025-11-10 07:51:52');
-INSERT INTO `sys_user` VALUES (2, 'ls001', '$2a$10$ceuIxbSWdwHemfpBgfvK0uBu.0mZl6.eEcgMUBjoeN6S7.a...6Cq', '18787871623', '2383404558@qq.com', '0', 6000.00, '2', '1', '0', 1, 1, 1, 1, '李四', '2025-06-12 11:50:16', '2025-11-07 09:11:25');
 INSERT INTO `sys_user` VALUES (3, 'root', '$2a$10$bI7MkRirh36ZZ9dgRLAIwu9eefXDNMdbORHMvMCVUqohIYa4H/yKG', '17398208709', '2383404558@qq.com', '0', 1000000.00, '1', '1', '0', 1, 1, 1, 1, 'admin', NULL, '2025-09-26 07:21:26');
-INSERT INTO `sys_user` VALUES (4, '2020001', '$2a$10$DeWn8iIjAJXNkVr6UPuB7.r6IB/6N9AHQyZnnkzX3oHLDNiJhVkDO', '18787171906', '', '0', 6000.00, '2', '1', '0', 1, 1, 1, 1, '张明', '2025-07-03 20:25:41', NULL);
-INSERT INTO `sys_user` VALUES (5, '2025002', '$2a$10$3JqLa3vUoqd7Y7H7tyz67uHyvvbHk2bmzLW0HY4ux2vb1z8o143Jy', '18787171906', '', '1', 5000.00, '2', '1', '0', 1, 1, 1, 1, '李丽', '2025-07-03 20:26:08', '2025-07-08 11:55:40');
 INSERT INTO `sys_user` VALUES (6, 'admin', '$2a$10$fKInjm/5Cd/3/NGBiGggLeUG4RrE7oKGWt9qss658vGusO/m6ceGG', '18687116223', '', '0', 10000.00, '1', '1', '1', 1, 1, 1, 1, 'admin1', '2025-07-04 19:08:05', NULL);
-INSERT INTO `sys_user` VALUES (18, 'noy', '$2a$10$ktvJEH8AEDq/B8iVF8Qt2u/tTVOkzGqCKdRKnCeYoTKApXBMR0A1m', '17398208709', '2803038543@qq.com', '0', 800000.00, '2', '1', '0', 1, 1, 1, 1, 'noy', '2025-11-10 08:11:06', '2025-11-10 08:15:31');
-INSERT INTO `sys_user` VALUES (19, 'yg', '$2a$10$oUCScRDjAaFYxCCQD4EG6eN8A6oyrvOqyaUcsBQGkbL2rCkTALCRK', '1', '2803038543@qq.com', '0', 1.00, '1', '1', '0', 1, 1, 1, 1, 'yg', '2025-11-10 08:15:59', NULL);
-INSERT INTO `sys_user` VALUES (20, 'jl', '$2a$10$bZVhRX24D9u1OBYIOSQ92.2HaXexi4y/2xXQJ3KG4Rosly5HonVjW', '1', '2803038543@qq.com', '0', 1.00, '2', '1', '0', 1, 1, 1, 1, 'jl', '2025-11-10 08:16:15', NULL);
 INSERT INTO `sys_user` VALUES (21, '123456', '$2a$10$jjNPbapkILwwMqvntfnhLO0Sa2Kg71git23.HuDmX051FemvJUOI2', '17398208709', '123', '0', NULL, '2', '1', '0', 1, 1, 1, 1, '阿浅', '2025-11-10 13:20:26', NULL);
 INSERT INTO `sys_user` VALUES (22, '1', '$2a$10$m.MUwvDVpPXVZpG3/3uCeOooQfw/.k.EeOd.0o/avMa.6DYKYypwa', '17398208709', '2803038543@qq,com', '0', 10000000.00, NULL, '1', '0', 1, 1, 1, 1, '阿浅', '2025-11-11 02:35:10', NULL);
 
@@ -931,3 +925,37 @@ INSERT INTO `sys_user_role` VALUES (36, 21, 3);
 INSERT INTO `sys_user_role` VALUES (37, 22, 6);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ==== 教练子类型与课程教师同步改造 ====
+-- 为 sys_user 增加教练子类型字段
+ALTER TABLE `sys_user`
+  ADD COLUMN `coach_type` varchar(16) NULL COMMENT '教练子类型：课程教练/助教' AFTER `user_type`;
+ALTER TABLE `sys_user` ADD INDEX `idx_user_type_coach_type` (`user_type`, `coach_type`);
+
+-- 将课程列表中未在员工表出现的授课教师插入 sys_user（保持 user_id 与 course.teacher_id 一致），并标注为“课程教练”
+INSERT INTO `sys_user` (
+  `user_id`, `username`, `password`, `phone`, `email`, `sex`, `salary`,
+  `user_type`, `status`, `is_admin`, `is_account_non_expired`, `is_account_non_locked`,
+  `is_credentials_non_expired`, `is_enabled`, `nick_name`, `create_time`, `update_time`, `coach_type`
+)
+SELECT
+  c.`teacher_id` AS `user_id`,
+  CONCAT('coach_', c.`teacher_id`) AS `username`,
+  '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme' AS `password`,
+  '' AS `phone`, '' AS `email`, '0' AS `sex`, 0.00 AS `salary`,
+  '2' AS `user_type`, '1' AS `status`, '0' AS `is_admin`,
+  1 AS `is_account_non_expired`, 1 AS `is_account_non_locked`,
+  1 AS `is_credentials_non_expired`, 1 AS `is_enabled`,
+  c.`teacher_name` AS `nick_name`, NOW() AS `create_time`, NULL AS `update_time`,
+  '课程教练' AS `coach_type`
+FROM `course` c
+LEFT JOIN `sys_user` u ON u.`user_id` = c.`teacher_id`
+WHERE u.`user_id` IS NULL
+GROUP BY c.`teacher_id`, c.`teacher_name`;
+
+-- 为所有教练用户补齐“教练”角色绑定（role_id = 3）
+INSERT INTO `sys_user_role` (`user_id`, `role_id`)
+SELECT u.`user_id`, 3
+FROM `sys_user` u
+LEFT JOIN `sys_user_role` ur ON ur.`user_id` = u.`user_id` AND ur.`role_id` = 3
+WHERE u.`user_type` = '2' AND ur.`user_id` IS NULL;

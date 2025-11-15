@@ -2,6 +2,7 @@ package com.noy.web.course.controller;
 
 // MyBatis Plus
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -224,7 +225,7 @@ public class CourseController {
         query.lambda().eq(Course::getTeacherId, param.getUserId());
         IPage<Course> list = courseService.page(page, query);
         return ResultUtils.success("查询成功", list);
-}
+    }
     /**
      * 导出课程学生（教练权限）
      * 返回CSV字符串，前端保存为文件
@@ -260,5 +261,20 @@ public class CourseController {
         boolean needsQuote = s.contains(",") || s.contains("\n") || s.contains("\r") || s.contains("\"");
         String escaped = s.replace("\"", "\"\"");
         return needsQuote ? "\"" + escaped + "\"" : escaped;
+    }
+    /**
+     * 清空课程授课教练
+     */
+    @PutMapping("/unassignTeacher/{courseId}")
+    public ResultVo unassignTeacher(@PathVariable("courseId") Long courseId) {
+        UpdateWrapper<Course> uw = new UpdateWrapper<>();
+        uw.lambda().eq(Course::getCourseId, courseId)
+                .set(Course::getTeacherId, null)
+                .set(Course::getTeacherName, null);
+        boolean ok = courseService.update(uw);
+        if (ok) {
+            return ResultUtils.success("移除成功!");
+        }
+        return ResultUtils.error("移除失败!");
     }
 }

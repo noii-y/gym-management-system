@@ -38,6 +38,7 @@
           <el-tag v-if="scope.row.userType == '2'" type="danger" size="default">教练</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="coachType" label="教练子类型"></el-table-column>
       <el-table-column prop="salary" label="薪水"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template #default="scope">

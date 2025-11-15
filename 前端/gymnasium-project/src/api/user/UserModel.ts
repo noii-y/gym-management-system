@@ -45,4 +45,5 @@ export type AddUserModel = {
   status: string    // 状态
   salary: string    // 薪资
   nickName: string  // 昵称
+  coachType?: string
 }
