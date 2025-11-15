@@ -62,8 +62,6 @@ const { dialog, onClose, onConfirm, onShow } = useDialog();
  * @param row 编辑时的数据行
  */
 const show = (type: string, row?: SuggestType) => {
-    console.log(type);
-    console.log(row);
 
     // 设置弹窗高度和标题
     dialog.height = 160;
@@ -73,7 +71,7 @@ const show = (type: string, row?: SuggestType) => {
     if (type === EditType.EDIT) {
         nextTick(() => {
             if (row) {
-                global.$objCoppy(row, addModel);
+                global.$objCopy(row, addModel);
             }
         });
     }

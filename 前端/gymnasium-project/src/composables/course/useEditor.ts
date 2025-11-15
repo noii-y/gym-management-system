@@ -18,10 +18,6 @@ export default function useEditor() {
         server: process.env.BASE_API + '/api/upload/uploadImage',
         // 自定义插入图片
         customInsert(res: any, insertFn: InsertFnType) {
-            // res 即服务端的返回结果
-            console.log('路径:', process.env.BASE_API +
-                res.data.msg)
-            // 从 res 中找到 url alt href ，然后插图图片
             insertFn(res.data.msg)
         },
     }

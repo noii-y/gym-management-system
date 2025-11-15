@@ -30,40 +30,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-// Lombok 注解
-import lombok.Data;
 
 // 项目内部类
 import com.noy.jwt.JwtUtils;
 
-/**
- * JWT Token验证过滤器
- * 
- * <p>继承OncePerRequestFilter，确保每个请求只执行一次过滤，提供JWT Token的验证功能，包括：</p>
- * <ul>
- *   <li>拦截HTTP请求并检查JWT Token</li>
- *   <li>验证Token的有效性和完整性</li>
- *   <li>解析Token中的用户信息和权限</li>
- *   <li>设置Spring Security上下文</li>
- *   <li>处理Token验证失败的情况</li>
- *   <li>支持忽略特定URL的Token验证</li>
- * </ul>
- * 
- * <p>业务特性：</p>
- * <ul>
- *   <li>Token格式验证 - 检查Authorization头格式</li>
- *   <li>签名验证 - 验证Token签名的有效性</li>
- *   <li>过期检查 - 检查Token是否已过期</li>
- *   <li>用户加载 - 根据Token中的用户名加载用户详情</li>
- *   <li>权限设置 - 将用户权限设置到Security上下文</li>
- *   <li>异常处理 - 统一处理各种Token验证异常</li>
- * </ul>
- * 
- * @author noy
- * @version 1.0
- * @since 2024
- */
-@Data
+/** JWT 过滤器：校验 Token 并设置安全上下文，支持忽略 URL */
 @Component("checkTokenFilter")
 public class CheckTokenFilter extends OncePerRequestFilter {
 
@@ -95,17 +66,7 @@ public class CheckTokenFilter extends OncePerRequestFilter {
     @Autowired
     private LoginFailureHandler loginFailureHandler;
 
-    /**
-     * 过滤器核心方法
-     * 
-     * <p>对每个HTTP请求进行Token验证</p>
-     * 
-     * @param request HTTP请求对象
-     * @param response HTTP响应对象
-     * @param filterChain 过滤器链
-     * @throws ServletException Servlet异常
-     * @throws IOException IO异常
-     */
+    /** 过滤器核心方法 */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, 
@@ -128,14 +89,7 @@ public class CheckTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * 验证Token的有效性
-     * 
-     * <p>从请求头或参数中获取Token，验证其有效性，并设置用户认证信息</p>
-     * 
-     * @param request HTTP请求对象
-     * @throws CustomAuthenticationException Token验证失败时抛出自定义认证异常
-     */
+    /** 验证 Token 并设置认证信息 */
     private void validateToken(HttpServletRequest request) {
         // 获取Token数据（优先从请求头获取）
         String token = request.getHeader("token");

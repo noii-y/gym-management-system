@@ -111,7 +111,7 @@ const show = (type: string, row?: LostType) => {
     // 如果是编辑模式，设置回显数据
     if (type == EditType.EDIT) {
         nextTick(() => {
-            global.$objCoppy(row, addModel);
+            global.$objCopy(row, addModel);
         });
     }
     

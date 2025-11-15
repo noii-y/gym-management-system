@@ -1,14 +1,15 @@
 import { nextTick, onMounted, reactive, ref } from "vue";
 import type { LostParam } from '@/api/lost/LostModel'
 import { getListApi } from "@/api/lost";
+// 失物表格：列表数据与分页
 export default function useTable() {
-    //表格高度
+    // 表格高度
     const tableHeight = ref(0)
-    //定义表格数据
+    // 表格数据
     const tableData = reactive({
         list: []
     })
-    //列表参数
+    // 查询参数
     const listParam = reactive<LostParam>({
         currentPage: 1,
         pageSize: 10,
@@ -29,7 +30,6 @@ export default function useTable() {
     const getList = async () => {
         let res = await getListApi(listParam)
         if (res && res.code == 200) {
-            console.log(res)
             tableData.list = res.data.records;
             listParam.total = res.data.total
         }

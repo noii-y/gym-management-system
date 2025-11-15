@@ -1,4 +1,4 @@
-package com.noy.web.goods.Controller;
+package com.noy.web.goods.controller;
 
 // MyBatis Plus 相关
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

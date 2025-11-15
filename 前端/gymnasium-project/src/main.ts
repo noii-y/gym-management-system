@@ -20,7 +20,7 @@ import { createPinia } from 'pinia'
 import { createPersistedState } from 'pinia-plugin-persistedstate'
 
 // ==================== 工具函数导入 ====================
-import objCoppy from './utils/objCoppy'      // 对象复制工具
+import objCopy from './utils/objCopy'      // 对象复制工具
 import myconfirm from './utils/myconfirm'    // 信息确认框工具
 import * as echarts from 'echarts'           // ECharts图表库
 
@@ -36,7 +36,7 @@ pinia.use(createPersistedState({
 const app = createApp(App)
 
 // ==================== 挂载全局属性 ====================
-app.config.globalProperties.$objCoppy = objCoppy      // 对象复制工具
+app.config.globalProperties.$objCopy = objCopy      // 对象复制工具
 app.config.globalProperties.$myconfirm = myconfirm    // 确认框工具
 app.config.globalProperties.$echarts = echarts        // ECharts图表库
 

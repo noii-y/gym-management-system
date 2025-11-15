@@ -25,7 +25,7 @@
         </el-form>
 
         <!-- 课程数据表格 -->
-        <el-table :data="tableDate.list" :height="tableHeight" border stripe ref="tableRef">
+        <el-table :data="tableData.list" :height="tableHeight" border stripe ref="tableRef">
             <el-table-column prop="image" label="课程封面" width="90" align="center">
                 <template #default="scope">
                     <el-image style="width: 60px; height: 60px; border-radius: 50%" :src="scope.row.image" />
@@ -82,7 +82,7 @@ import { ref } from 'vue';
 // 表格相关功能：查询参数、数据获取、搜索、重置、分页等
 const {
     listParam,
-    tableDate,
+    tableData,
     getList,
     sizeChange,
     currentChange,

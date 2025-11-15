@@ -55,8 +55,6 @@ const activeIndex = computed(() => {
 const menuList = computed(() => {
   return mstore.getMenuList
 })
-
-console.log(menuList) 
 </script>
 
 <style scoped lang="scss">

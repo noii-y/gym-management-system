@@ -1,10 +1,11 @@
+import { nextTick, onMounted, reactive, ref } from "vue";
 import type { GoodsParam } from "@/api/goods/GoodsModel";
- import { nextTick, onMounted, reactive, ref } from "vue";
- import { listApi } from "@/api/goods";
- export default function useTable(){
- //表格高度
+import { listApi } from "@/api/goods";
+// 商品表格：列表数据与分页
+export default function useTable(){
+// 表格高度
 const tableHeight = ref(0)
- //表格数据
+ // 表格数据
 const tableData = reactive({
  list:[]
  })
@@ -19,7 +20,6 @@ const listParam = reactive<GoodsParam>({
 const getList = async()=>{
  let res = await listApi(listParam)
  if(res && res.code == 200){
- console.log(res)
  //设置表格数据
 tableData.list = res.data.records;
  //设置分页总数

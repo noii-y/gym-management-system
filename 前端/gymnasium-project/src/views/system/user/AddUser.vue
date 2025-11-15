@@ -171,7 +171,7 @@ const show = async (type: string, row?: AddUserModel) => {
     if (type == EditType.EDIT && row) {
         // 编辑时回显数据到表单
             nextTick(() => {
-                global.$objCoppy(row, addModel);
+                global.$objCopy(row, addModel);
                 addModel.roleId = roleId.value;
                 onRoleChange(addModel.roleId);
             });

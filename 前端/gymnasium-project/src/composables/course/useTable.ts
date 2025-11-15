@@ -1,7 +1,4 @@
-/**
- * 课程表格管理组合式函数
- * 提供课程列表的数据管理、分页、搜索和重置功能
- */
+// 课程表格：列表数据、分页、搜索与重置
 import { nextTick, onMounted, reactive, ref } from "vue";
 import type { CourselistParam } from '@/api/course/CourseModel'
 import { listApi } from "@/api/course";
@@ -15,7 +12,7 @@ export default function useTable() {
     /**
      * 表格数据对象，包含课程列表
      */
-    const tableDate = reactive({
+    const tableData = reactive({
         list: []
     })
     
@@ -37,8 +34,7 @@ export default function useTable() {
     const getList = async () => {
         let res = await listApi(listParam)
         if (res && res.code == 200) {
-            console.log(res)
-            tableDate.list = res.data.records;
+            tableData.list = res.data.records;
             listParam.total = res.data.total;
         }
     }
@@ -104,7 +100,7 @@ export default function useTable() {
     
     return {
         listParam,      // 查询参数
-        tableDate,      // 表格数据
+        tableData,      // 表格数据
         getList,        // 获取列表数据方法
         sizeChange,     // 页容量改变处理方法
         currentChange,  // 页码改变处理方法

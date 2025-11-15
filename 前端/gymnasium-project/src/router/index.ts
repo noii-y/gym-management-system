@@ -1,7 +1,4 @@
-/**
- * 健身房管理系统路由配置
- * 定义了系统的所有路由规则和权限控制
- */
+// 路由配置：定义静态路由与模块分组
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/Index.vue'
 
@@ -28,12 +25,7 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     component: () => import('@/views/login/ResetPassword.vue'),
     name: "resetPassword"
   },
-  // 注册页面先注释
-  // {
-  //   path: "/register",
-  //   component: () => import('@/views/login/Register.vue'),
-  //   name: "register"
-  // },
+  
   
   // 主页面布局路由
   {

@@ -74,7 +74,7 @@ const show = (type: string, row?: MaterialType) => {
 
     // 编辑模式下回显数据
     if (type === EditType.EDIT && row) {
-        nextTick(() => global.$objCoppy(row, addModel));
+        nextTick(() => global.$objCopy(row, addModel));
     }
 
     // 显示弹窗并重置表单

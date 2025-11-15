@@ -140,10 +140,7 @@ onMounted(() => {
 });
 // 选项卡点击事件
 const clickBtn = (tab: any) => {
-  console.log(tab);
   const { props } = tab;
-  console.log(props);
-  // 跳转路由
   router.push({ path: props.name });
 };
 </script>
@@ -160,7 +157,7 @@ const clickBtn = (tab: any) => {
   margin: 0px 3px !important;
   color: #495060;
   font-size: 12px !important;
-  padding: 0xp 10px !important;
+  padding: 0px 10px !important;
 }
 
 :deep(.el-tabs__nav) {

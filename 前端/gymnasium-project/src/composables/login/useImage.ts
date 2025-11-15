@@ -1,23 +1,14 @@
-/**
- * 验证码图片管理组合式函数
- * 用于获取和管理登录页面的验证码图片
- */
+// 验证码图片：获取与展示
 import { onMounted, ref } from "vue";
 import { getImageApi } from "@/api/login";
 
 export default function useImage() {
-  /**
-   * 验证码图片的src地址
-   */
+  // 图片地址
   const imgSrc = ref<string>()
 
-  /**
-   * 获取验证码图片
-   * 调用API获取新的验证码图片并更新imgSrc
-   */
+  // 获取验证码图片
   const getImage = async () => {
     let res = await getImageApi()
-    console.log(res)
     if (res && res.code == 200) {
       imgSrc.value = res.data.image;
     }

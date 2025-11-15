@@ -1,13 +1,7 @@
-/**
- * 测试状态管理
- * 用于开发和测试阶段的状态管理示例
- */
+// 测试状态：开发阶段示例
 import { defineStore } from 'pinia'
 
-/**
- * 测试状态Store
- * 简单的计数器状态管理，用于测试和演示
- */
+// 测试 Store：计数器示例
 export const testStore = defineStore('testStore', {
   /**
    * 状态定义
@@ -41,7 +35,6 @@ export const testStore = defineStore('testStore', {
      * @param count 新的计数值
      */
     setCount(count: number) {
-      console.log('设置计数值:', count)
       this.count = count;
     }
   }

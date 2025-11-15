@@ -192,7 +192,7 @@ const show = (type: string, row?: GoodsType) => {
     if (type === EditType.EDIT && row) {
         nextTick(() => {
             // 复制商品数据到表单模型
-            global.$objCoppy(row, addModel)
+            global.$objCopy(row, addModel)
 
             // 处理商品图片
             if (row.image) {

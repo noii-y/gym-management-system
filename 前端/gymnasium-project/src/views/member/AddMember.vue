@@ -173,8 +173,8 @@ const show = async (type: string, row?: MemberType) => {
         
     if (EditType.EDIT == type) {
         // 编辑模式：将要编辑的数据复制到表单对象
-        nextTick(() => {
-            global.$objCoppy(row, addModel);
+            nextTick(() => {
+            global.$objCopy(row, addModel);
             addModel.roleId = roleMemberId.value
         });
     }

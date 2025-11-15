@@ -101,7 +101,7 @@ const show = (type: string, row?: AddRoleModel) => {
   // 编辑：回显数据到表单，并兼容历史字段名
   nextTick(() => {
     if (row) {
-      global.$objCoppy(row, addModel);
+      global.$objCopy(row, addModel);
       // 统一将类型转为字符串，避免后端返回数字导致下拉回显不正确
       if ((addModel as any)?.types !== undefined && (addModel as any)?.types !== null) {
         addModel.types = String((addModel as any).types);

@@ -86,7 +86,6 @@ const { global } = useInstance();
 const myChart = ref<HTMLElement>();
 const myChart1 = ref<HTMLElement>();
 const myChart2 = ref<HTMLElement>();
-const mianHeight = ref(0);
 
 // 个性化问候
 const greeting = reactive({
@@ -324,9 +323,7 @@ onMounted(async () => {
         charts3(),
     ]);
 
-    nextTick(() => {
-        mianHeight.value = window.innerHeight - 90;
-    });
+    // 无需高度计算，移除未使用变量
 });
 </script>
 <style lang="scss" scoped>

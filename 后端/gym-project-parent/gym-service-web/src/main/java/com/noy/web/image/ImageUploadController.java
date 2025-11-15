@@ -17,21 +17,7 @@ import com.noy.utils.ResultUtils;
 import com.noy.utils.ResultVo;
 
 /**
- * 图片上传控制器
- * 
- * <p>提供图片文件上传相关的REST API接口，基于MinIO对象存储服务</p>
- * 
- * <p>主要功能包括：</p>
- * <ul>
- *   <li>图片文件上传 - 支持多种图片格式上传</li>
- *   <li>MinIO存储 - 将图片存储到MinIO对象存储服务</li>
- *   <li>文件管理 - 自动处理文件命名和路径管理</li>
- *   <li>异常处理 - 完善的文件上传异常处理机制</li>
- * </ul>
- * 
- * @author noy
- * @version 1.0
- * @since 2024
+ * 图片上传控制器：基于 MinIO 的图片上传接口
  */
 @RestController
 @RequestMapping("/api/upload/")
@@ -48,14 +34,7 @@ public class ImageUploadController {
     
     // ==================== API接口方法 ====================
     
-    /**
-     * 上传图片文件
-     * 
-     * <p>将用户上传的图片文件存储到MinIO对象存储服务中</p>
-     * 
-     * @param file 要上传的图片文件
-     * @return ResultVo 包含上传结果和文件信息的响应对象
-     */
+    /** 上传图片 */
     @RequestMapping("/uploadImage")
     public ResultVo uploadImage(@RequestParam("file") MultipartFile file) {
         log.info("开始进行文件上传");
@@ -64,7 +43,6 @@ public class ImageUploadController {
             images = minioUtils.uploadFile(file, "gym"); // 这里记得填正确的bucket容器
         } catch (Exception e) {
             log.error("文件上传失败", e);
-            e.printStackTrace();
         }
         return ResultUtils.success("图片上传成功", images);
     }

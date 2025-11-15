@@ -1,14 +1,15 @@
-import type { listParam } from "@/api/material/MaterialModel";
 import { nextTick, onMounted, reactive, ref } from "vue";
+import type { listParam } from "@/api/material/MaterialModel";
 import { getListApi } from "@/api/material";
+// 器材表格：列表数据与分页
 export default function useTable() {
-    //表格高度
+    // 表格高度
     const tableHeight = ref(0)
-    //定义表格数据
+    // 表格数据
     const tableData = reactive({
         list: []
     })
-    //列表查询参数
+    // 查询参数
     const listParam = reactive<listParam>({
         name: '',
         currentPage: 1,
@@ -19,7 +20,6 @@ export default function useTable() {
     const getList = async () => {
         let res = await getListApi(listParam)
         if (res && res.code == 200) {
-            console.log(res)
             tableData.list = res.data.records;
             listParam.total = res.data.total;
         }

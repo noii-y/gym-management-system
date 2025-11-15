@@ -30,30 +30,29 @@ const route = useRoute();
  * 生成面包屑导航数据
  * 根据当前路由的匹配路径生成面包屑层级
  */
-const getBredcrumb = () => {
+const getBreadcrumb = () => {
   // 从路由匹配项中筛选出有meta和title的路由
-  let mached = route.matched.filter((item) => item.meta && item.meta.title);
+  let matched = route.matched.filter((item) => item.meta && item.meta.title);
   
   // 判断第一个路由是否是首页，如果不是则添加首页作为根路径
-  const first = mached[0];
+  const first = matched[0];
   if (first.path !== "/dashboard") {
-    mached = [{ path: "/dashboard", meta: { title: "首页" } } as any].concat(mached);
+    matched = [{ path: "/dashboard", meta: { title: "首页" } } as any].concat(matched);
   }
   
   // 更新面包屑数据
-  tabs.value = mached;
-  console.log(tabs.value);
+  tabs.value = matched;
 };
 
 // 初始化面包屑
-getBredcrumb();
+getBreadcrumb();
 
 /**
  * 监听路由变化，自动更新面包屑
  */
 watch(
   () => route.path,
-  () => getBredcrumb()
+  () => getBreadcrumb()
 );
 </script>
 

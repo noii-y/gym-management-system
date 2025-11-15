@@ -194,7 +194,7 @@ const show = async (type: string, row?: CourseType) => {
     if (type == EditType.EDIT) {
         nextTick(() => {
             // 把要编辑的数据复制到表单绑定的对象
-            global.$objCoppy(row, addModel);
+            global.$objCopy(row, addModel);
 
             // 文本编辑器的回显
             valueHtml.value = addModel.courseDetails;
@@ -364,7 +364,6 @@ const commit = () => {
  * @param val 选择的教练对象
  */
 const selectTeach = (val: any) => {
-    console.log("obj:", val);
     addModel.teacherId = val.value;
     addModel.teacherName = val.label;
 };

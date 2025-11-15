@@ -1,7 +1,4 @@
-/**
- * 路由权限控制文件
- * 实现全局路由守卫，控制页面访问权限
- */
+// 全局路由守卫：控制页面访问权限
 import router from "./router"
 import { userStore } from "./store/user"
 import { menuStore } from "./store/menu"
@@ -16,13 +13,13 @@ const whiteList = ['/login', '/register', '/resetPassword']
  * 在每次路由跳转前进行权限验证
  */
 router.beforeEach(async (to, from, next) => {
-  // 获取用户store实例
+  // 用户状态
   const ustore = userStore()
-  // 获取菜单store实例
+  // 菜单状态
   const mstore = menuStore()
   
-  // 白名单路由优先放行（即使存在token也不做鉴权或数据拉取）
-  if (whiteList.indexOf(to.path) !== -1) {
+  // 白名单：无需鉴权直接放行
+  if (whiteList.includes(to.path)) {
     next()
     return
   }
@@ -47,7 +44,7 @@ router.beforeEach(async (to, from, next) => {
           })
           next({ ...to, replace: true })
         } catch (error) {
-          console.error('获取用户信息失败:', error)
+          if (import.meta.env.DEV) { console.error('获取用户信息失败:', error) }
           localStorage.clear()
           ustore.clearUserInfo()
           next({ path: '/login' })
@@ -56,7 +53,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     // token不存在的情况
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.includes(to.path)) {
       // 目标路径在白名单中，直接放行
       next()
     } else {

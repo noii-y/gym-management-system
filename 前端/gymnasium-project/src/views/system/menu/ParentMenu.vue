@@ -116,7 +116,6 @@ const getParent = async () => {
  * @param node 点击的菜单节点
  */
 const handleNodeClick = (node: MenuType) => {
-    console.log(node);
     selectNode.parentId = node.menuId;
     selectNode.parentName = node.title;
 };
@@ -139,7 +138,6 @@ const confirm = () => {
  * @param data 菜单节点数据
  */
 const openBtn = (data: MenuType) => {
-    console.log(data);
     // 切换展开/收起状态
     data.open = !data.open;
     // 更新Element Plus树组件的展开状态

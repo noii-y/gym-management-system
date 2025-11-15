@@ -1,7 +1,4 @@
-/**
- * 菜单状态管理
- * 管理系统动态菜单的生成和路由配置
- */
+// 菜单状态：动态菜单与路由生成
 import { defineStore } from "pinia";
 import { getMenuListApi } from "@/api/login";
 import { type RouteRecordRaw, type Router } from "vue-router";
@@ -9,10 +6,7 @@ import Layout from '@/layout/Index.vue'
 import center from '@/layout/center/center.vue'
 import { type InfoParam } from "@/api/login/LoginModel";
 
-/**
- * 静态导入所有页面组件
- * 用于动态路由组件的加载
- */
+// 动态路由组件映射的静态导入
 // 课程管理
 import AddCourse from '@/views/course/AddCourse.vue'
 import CourseList from '@/views/course/CourseList.vue'
@@ -54,10 +48,7 @@ import RoleList from '@/views/system/role/RoleList.vue'
 import AddUser from '@/views/system/user/AddUser.vue'
 import UserList from '@/views/system/user/UserList.vue'
 
-/**
- * 组件映射表
- * 将组件路径映射到实际的组件
- */
+// 组件映射表：后端 url → 前端组件
 const componentMap: Record<string, any> = {
   '/course/AddCourse': AddCourse,
   '/course/CourseList': CourseList,
@@ -102,17 +93,12 @@ const componentMap: Record<string, any> = {
   '/system/user/UserList': UserList,
 }
 
-/**
- * 菜单状态类型定义
- */
+// Store 状态类型
 interface MenuState {
   menuList: RouteRecordRaw[]  // 菜单路由列表
 }
 
-/**
- * 菜单状态Store
- * 用于管理系统的动态菜单和路由
- */
+// 菜单状态 Store
 export const menuStore = defineStore('menuStore', {
   /**
    * 状态定义
@@ -127,11 +113,7 @@ export const menuStore = defineStore('menuStore', {
    * 计算属性
    */
   getters: {
-    /**
-     * 获取菜单列表
-     * @param state 当前状态
-     * @returns RouteRecordRaw[] 菜单路由列表
-     */
+    // 获取菜单列表
     getMenuList(state: MenuState): RouteRecordRaw[] {
       // 读取时兼容旧菜单项，将 /myFee 的标题替换为“充值记录”
       const fixTitle = (route: any): any => {
@@ -153,12 +135,7 @@ export const menuStore = defineStore('menuStore', {
    * 操作方法
    */
   actions: {
-    /**
-     * 获取用户菜单并生成动态路由
-     * @param router Vue路由实例
-     * @param Param 用户信息参数
-     * @returns Promise<RouteRecordRaw[]> 生成的路由列表
-     */
+    // 获取用户菜单并生成动态路由
     getMenu(router: Router, Param: InfoParam): Promise<RouteRecordRaw[]> {
       return new Promise((resolve, reject) => {
         getMenuListApi(Param).then((res) => {
@@ -166,7 +143,7 @@ export const menuStore = defineStore('menuStore', {
           
           if (res && res.code == 200) {
             // 调试日志：后端返回的菜单路由数据
-            try { console.log('[menu] getMenuListApi data:', res.data) } catch (_) {}
+            try { if (import.meta.env.DEV) { console.log('[menu] getMenuListApi data:', res.data) } } catch (_) {}
             // 动态生成路由
             accessRoute = generateRoutes(res.data, router)
             
@@ -197,20 +174,11 @@ export const menuStore = defineStore('menuStore', {
     }
   },
   
-  /**
-   * 持久化配置
-   * 将菜单状态保存到localStorage
-   */
+  // 持久化配置
   persist: true
 })
 
-/**
- * 动态生成路由函数
- * 根据后端返回的菜单数据生成前端路由配置
- * @param routes 后端返回的路由数据
- * @param router Vue路由实例
- * @returns RouteRecordRaw[] 生成的路由配置
- */
+// 根据后端菜单生成前端路由
 export function generateRoutes(routes: RouteRecordRaw[], router: Router): RouteRecordRaw[] {
   // 定义接收生成的菜单
   const res: RouteRecordRaw[] = [];

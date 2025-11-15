@@ -112,7 +112,7 @@ const show = (type: string, row?: CardType) => {
   if (type == EditType.EDIT) {
     // 编辑模式：将要编辑的数据复制到表单对象
     nextTick(() => {
-      global.$objCoppy(row, addModel);
+      global.$objCopy(row, addModel);
     });
   }
   addModel.type = type;

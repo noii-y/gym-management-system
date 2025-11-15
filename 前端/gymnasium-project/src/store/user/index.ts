@@ -1,13 +1,8 @@
-/**
- * 用户状态管理
- * 管理用户信息、认证状态和权限数据
- */
+// 用户状态：用户信息、认证与权限
 import { defineStore } from "pinia";
 import { getInfoApi } from "@/api/login";
 
-/**
- * 用户信息接口定义
- */
+// 用户信息类型
 export interface UserInfo {
   userId: string      // 用户ID
   username: string    // 用户名
@@ -19,19 +14,14 @@ export interface UserInfo {
   avatar?: string     // 头像URL（可选）
 }
 
-/**
- * 用户状态类型定义
- */
+// Store 状态类型
 interface UserState {
   userInfo: UserInfo    // 用户基本信息
   token: string         // 认证令牌
   codeList: string[]    // 权限代码列表
 }
 
-/**
- * 用户状态Store
- * 用于管理用户登录状态、个人信息和权限
- */
+// 用户状态 Store
 export const userStore = defineStore('userStore', {
   /**
    * 状态定义

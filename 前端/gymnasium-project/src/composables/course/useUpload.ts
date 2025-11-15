@@ -2,24 +2,22 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { UploadFile } from 'element-plus'
 import { uploadImageApi } from '@/api/course/index'
+// 图片上传：管理文件列表、上传与预览
 export default function useUpload() {
-    //图片上传组件ref属性
+    // 上传组件 ref
     const uploadRef = ref()
-    //图片预览地址
+    // 预览地址
     const dialogImageUrl = ref('')
-    //是否点击预览
+    // 预览弹窗开关
     const dialogVisible = ref(false)
     const disabled = ref(false)
-    //上传的文件
+    // 文件列表
     const fileList = ref<UploadFile[]>([])
-    //上传图片的地址
+    // 已上传图片地址
     const imgurl = ref('');
     //删除图片
     const handleRemove = (file: UploadFile) => {
-        console.log(file)
-        console.log(fileList.value)
-        fileList.value = fileList.value.filter(item => item.name
-            != file.name)
+        fileList.value = fileList.value.filter(item => item.name != file.name)
     }
     //点击预览图片
     const handlePictureCardPreview = (file: UploadFile) => {
@@ -46,8 +44,6 @@ export default function useUpload() {
         formData.append("file", file.raw);
         let res = await uploadImageApi(formData);
         if (res && res.code == 200 && res.data) {
-            console.log(res.data)
-            //imgurl.value = res.data;
             imgurl.value = res.data.msg;
             ElMessage.success("图片上传成功!");
         }
