@@ -233,9 +233,23 @@ public class CourseController {
     @GetMapping("/exportStudents")
     @PreAuthorize("hasAnyAuthority('sys:myTeaching:export')")
     public ResultVo exportStudents(@RequestParam Long courseId) {
-        // 查询该课程的所有报名记录
+        Course course = courseService.getById(courseId);
         QueryWrapper<MemberCourse> query = new QueryWrapper<>();
         query.lambda().eq(MemberCourse::getCourseId, courseId);
+        if (course != null) {
+            String tId = course.getTeacherId();
+            if (StringUtils.isNotEmpty(tId)) {
+                try {
+                    Long teacherId = Long.valueOf(tId);
+                    query.lambda().or(i -> i.eq(MemberCourse::getCourseName, course.getCourseName())
+                            .eq(MemberCourse::getTeacherId, teacherId));
+                } catch (Exception e) {
+                    query.lambda().or(i -> i.eq(MemberCourse::getCourseName, course.getCourseName()));
+                }
+            } else {
+                query.lambda().or(i -> i.eq(MemberCourse::getCourseName, course.getCourseName()));
+            }
+        }
         List<MemberCourse> list = memberCourseService.list(query);
 
         // 组装CSV内容

@@ -28,6 +28,7 @@ import { Notebook } from '@element-plus/icons-vue'
 import useMyCourseTable from '@/composables/mycourse/useMyCourseTable'
 import { exportStudentsApi } from '@/api/course'
 import { ElMessage } from 'element-plus'
+import * as XLSX from 'xlsx'
 
 const { listParam, tableData, sizeChange, currentChange, tableHeight } = useMyCourseTable()
 
@@ -41,15 +42,21 @@ const exportStudents = async (row: any) => {
         ElMessage.warning('无可导出的数据')
         return
       }
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${row.courseName}-学生清单.csv`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      window.URL.revokeObjectURL(url)
+      try {
+        const wb = XLSX.read(csv, { type: 'string' })
+        XLSX.writeFile(wb, `${row.courseName}-学生清单.xlsx`)
+      } catch (_) {
+        const csvWithBom = '\ufeff' + csv
+        const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${row.courseName}-学生清单.csv`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      }
     } else {
       ElMessage.error(res?.msg || '导出失败')
     }

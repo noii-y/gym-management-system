@@ -104,6 +104,7 @@ import useImage from "@/composables/login/useImage";
 import { loginApi } from "@/api/login/index";
 import { useRouter } from "vue-router";
 import { userStore } from "@/store/user";
+import { menuStore } from "@/store/menu";
 
 // 初始化store和router
 const store = userStore();
@@ -163,6 +164,9 @@ const onSubmit = async () => {
         email: res.data.email || '',
         avatar: res.data.avatar || ''
       });
+      const m = menuStore();
+      try { localStorage.removeItem('menuStore') } catch (_) {}
+      m.$reset();
       
       // 跳转到首页
       router.push({ path: "/" });

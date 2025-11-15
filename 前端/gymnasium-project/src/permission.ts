@@ -32,31 +32,21 @@ router.beforeEach(async (to, from, next) => {
   
   // 判断token是否存在
   if (token) {
-    // token存在的情况
-    if (to.path === '/login' || to.path === '/') {
-      // 已登录用户访问登录页或根路径，重定向到首页
+    if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      // 检查菜单是否已加载
       const menuList = mstore.getMenuList
       if (menuList.length > 0) {
-        // 菜单已加载，直接放行
         next()
       } else {
         try {
-          // 获取用户信息
           await ustore.getInfo()
-          
-          // 获取菜单信息，动态生成路由
           await mstore.getMenu(router, {
             userId: ustore.getUserId,
             userType: ustore.getUserType
           })
-          
-          // 等待路由全部挂载完成后跳转
           next({ ...to, replace: true })
         } catch (error) {
-          // 获取用户信息失败，清除本地数据并跳转到登录页
           console.error('获取用户信息失败:', error)
           localStorage.clear()
           ustore.clearUserInfo()

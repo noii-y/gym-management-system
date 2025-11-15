@@ -21,7 +21,7 @@ export default function useJoin() {
         }
         let res = await getListApi(param)
         if (res && res.code == 200) {
-            cardList.value = res.data
+            cardList.value = res.data?.records || []
         }
     }
     onMounted(() => {

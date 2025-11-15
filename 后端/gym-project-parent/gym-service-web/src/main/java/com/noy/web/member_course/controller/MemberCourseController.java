@@ -40,6 +40,7 @@ public class MemberCourseController {
         if (memberId != null) {
             query.lambda().eq(MemberCourse::getMemberId, memberId);
         }
+        query.lambda().orderByDesc(MemberCourse::getMemberCourseId);
         IPage<MemberCourse> list = memberCourseService.page(page, query);
         return ResultUtils.success("查询成功", list);
     }
