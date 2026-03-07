@@ -1,3 +1,7 @@
+/**
+ * 会员表格组合式函数
+ * 管理会员列表的数据获取、搜索、分页、重置与高度计算
+ */
 import type { MemberParam } from "@/api/member/MemberModel";
 import { nextTick, onMounted, reactive, ref, onBeforeUnmount, onActivated } from "vue";
 import { getListApi } from "@/api/member";
@@ -5,13 +9,13 @@ import { userStore } from "@/store/user";
 import { ElMessage } from "element-plus";
 export default function useTable() {
     const store = userStore()
-    //表格高度
+    /** 表格高度 */
     const tableHeight = ref(0)
-    //表格数据定义
+    /** 表格数据源 */
     const tableList = reactive({
         list: []
     })
-    //参数列表
+    /** 搜索与分页参数 */
     const listParam = reactive<MemberParam>({
         name: '',
         phone: '',
@@ -22,7 +26,7 @@ export default function useTable() {
         userType: '',
         total: 0
     })
-    //列表（等待用户信息就绪，并在失败时重试一次）
+    /** 列表（等待用户信息就绪，并在失败时重试一次） */
     const getList = async () => {
         try {
             await waitForUserReady()
@@ -43,32 +47,32 @@ export default function useTable() {
             ElMessage.error(e?.message || '获取会员列表失败')
         }
     }
-    //搜索
+    /** 搜索 */
     const searchBtn = () => {
         getList()
     }
-    //重置
+    /** 重置搜索条件 */
     const resetBtn = () => {
         listParam.name = ''
         listParam.phone = ''
         listParam.username = ''
         getList()
     }
-    //页容量改变时触发
+    /** 页容量改变 */
     const sizeChange = (size: number) => {
         listParam.pageSize = size;
         getList()
     }
-    //页数改变时触发
+    /** 页码改变 */
     const currentChange = (page: number) => {
         listParam.currentPage = page;
         getList()
     }
-    //刷新表格
+    /** 刷新当前页 */
     const refresh = () => {
         getList()
     }
-    // 等待用户信息就绪（token/userId），最多等待2秒
+    /** 等待用户信息就绪（token/userId），最多等待2秒 */
     const waitForUserReady = async () => {
         const start = Date.now()
         return new Promise<void>((resolve) => {
@@ -93,7 +97,7 @@ export default function useTable() {
     })
 
     onActivated(() => {
-        // 从标签或路由返回时保证数据刷新
+        /** 从标签或路由返回时保证数据刷新 */
         getList()
     })
 

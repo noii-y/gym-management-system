@@ -5,8 +5,7 @@
 <template>
   <!-- 面包屑导航容器 -->
   <el-breadcrumb class="bred" separator="/">
-    <!-- 动态渲染面包屑项 -->
-    <!-- <el-breadcrumb-item v-for="item in tabs">{{ item.meta.title }}</el-breadcrumb-item> -->
+    <el-breadcrumb-item v-for="item in tabs" :key="item.path">{{ item.meta.title }}</el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 
@@ -42,18 +41,15 @@ const getBredcrumb = () => {
   
   // 更新面包屑数据
   tabs.value = mached;
-  console.log(tabs.value);
 };
-
-// 初始化面包屑
-getBredcrumb();
 
 /**
  * 监听路由变化，自动更新面包屑
  */
 watch(
   () => route.path,
-  () => getBredcrumb()
+  () => getBredcrumb(),
+  { immediate: true }
 );
 </script>
 

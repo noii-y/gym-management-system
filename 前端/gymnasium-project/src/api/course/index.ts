@@ -88,3 +88,15 @@ export const deleteApi = (courseId: string) => {
 export const joinCourseApi = (param: SelectCoure) => {
   return http.post("/api/course/joinCourse", param)
 }
+
+/**
+ * 获取课程已报名会员列表
+ * 
+ * <p>用于导出课程学生名单功能</p>
+ * 
+ * @param courseId 课程ID
+ * @returns Promise 包含会员详细信息的列表结果
+ */
+export const getMembersByCourseIdApi = (courseId: number | string) => {
+  return http.get("/api/memberCourse/getMembersByCourseId", { courseId })
+}

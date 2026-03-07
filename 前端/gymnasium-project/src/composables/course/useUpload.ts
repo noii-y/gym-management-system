@@ -1,3 +1,7 @@
+/**
+ * 课程图片上传组合式函数
+ * 封装 Element Plus 图片上传/预览/校验 与后端上传接口调用
+ */
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { UploadFile } from 'element-plus'
@@ -16,10 +20,7 @@ export default function useUpload() {
     const imgurl = ref('');
     //删除图片
     const handleRemove = (file: UploadFile) => {
-        console.log(file)
-        console.log(fileList.value)
-        fileList.value = fileList.value.filter(item => item.name
-            != file.name)
+        fileList.value = fileList.value.filter(item => item.name !== file.name)
     }
     //点击预览图片
     const handlePictureCardPreview = (file: UploadFile) => {
@@ -38,7 +39,7 @@ export default function useUpload() {
             return;
         }
         if (!isMore3M) {
-            ElMessage.warning("只能上传图片类型!");
+            ElMessage.warning("图片大小不能超过 3MB!");
             uploadRef.value?.clearFiles()
             return;
         }
@@ -46,7 +47,6 @@ export default function useUpload() {
         formData.append("file", file.raw);
         let res = await uploadImageApi(formData);
         if (res && res.code == 200 && res.data) {
-            console.log(res.data)
             //imgurl.value = res.data;
             imgurl.value = res.data.msg;
             ElMessage.success("图片上传成功!");

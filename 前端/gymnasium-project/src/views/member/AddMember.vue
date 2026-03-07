@@ -7,7 +7,7 @@
         <template v-slot:content>
             <!-- 会员信息表单 -->
             <el-form :model="addModel" ref="addRormRef" :rules="rules" label-width="80px" size="default">
-                <!-- 第一行：姓名 和 会员卡号（登录优先） -->
+                <!-- 第一行：姓名 和 电话 -->
                 <el-row>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="name" label="姓名">
@@ -15,8 +15,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" :offset="0">
-                        <el-form-item prop="username" label="会员卡号">
-                            <el-input type="number" v-model="addModel.username"></el-input>
+                        <el-form-item prop="phone" label="电话">
+                            <el-input v-model="addModel.phone"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -36,13 +36,8 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!-- 第三行：电话 和 状态 -->
+                <!-- 第三行：状态 -->
                 <el-row>
-                    <el-col :span="12" :offset="0">
-                        <el-form-item prop="phone" label="电话">
-                            <el-input v-model="addModel.phone"></el-input>
-                        </el-form-item>
-                    </el-col>
                     <el-col :span="12" :offset="0">
                         <el-form-item prop="status" label="状态">
                             <el-radio-group v-model="addModel.status">
@@ -243,13 +238,6 @@ const rules = reactive({
         {
             required: true,
             trigger: "change",
-            message: "请填写加入时间",
-        },
-    ],
-    username: [
-        {
-            required: true,
-            trigger: "change",
             message: "请填写会员卡号",
         },
     ],
@@ -279,6 +267,8 @@ const emits = defineEmits(["refresh"]);
  * 验证表单并调用相应的API进行新增或编辑操作
  */
 const commit = () => {
+    // 确保会员卡号与电话一致
+    addModel.username = addModel.phone
     addRormRef.value?.validate(async (valid) => {
         if (valid) {
             let res = null;

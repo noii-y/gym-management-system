@@ -21,7 +21,7 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination @size-change="sizeChange" @current-change="currentChange"
-                    :current-page.sync="listParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
+                    v-model:current-page="listParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
                     :page-size="listParam.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listParam.total"
                     background />
             </el-tab-pane>
@@ -55,7 +55,7 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination @size-change="availSizeChange" @current-change="availCurrentChange"
-                    :current-page.sync="availParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
+                    v-model:current-page="availParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
                     :page-size="availParam.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="availParam.total"
                     background />
             </el-tab-pane>
@@ -80,7 +80,7 @@
             </el-table-column>
         </el-table>
         <el-pagination @size-change="sizeChange" @current-change="currentChange"
-            :current-page.sync="listParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
+            v-model:current-page="listParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
             :page-size="listParam.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listParam.total"
             background />
     </template>
@@ -99,6 +99,8 @@ import { Edit, Plus, Search, Close } from "@element-plus/icons-vue";
 import useMyCourseTable from "../../composables/mycourse/useMyCourseTable";
 // 导入类型定义
 import { type CourseType } from "@/api/course/CourseModel";
+import { getMembersByCourseIdApi } from "@/api/course";
+import * as XLSX from 'xlsx';
 // 导入全局工具
 import useInstance from "@/hooks/useInstance";
 import useAvailableCourseTable from "@/composables/mycourse/useAvailableCourseTable";
@@ -143,11 +145,55 @@ const join = async (row: CourseType) => {
 }
 
 /**
- * 导出学生信息
+ * 导出学生信息逻辑
+ * 
+ * <p>实现步骤：</p>
+ * <ul>
+ *   <li>1. 根据课程ID获取所有报名该课程的学生列表</li>
+ *   <li>2. 将学生列表数据转换为Excel所需的JSON格式</li>
+ *   <li>3. 使用xlsx库生成并下载Excel文件</li>
+ * </ul>
+ * 
  * @param row 课程数据行
  */
-const exportBtn = (row: CourseType) => {
-    // TODO: 实现导出学生功能
+const exportBtn = async (row: CourseType) => {
+    try {
+        // 1. 调用API获取学生列表
+        const res = await getMembersByCourseIdApi(row.courseId);
+        if (res && res.code === 200) {
+            const students = res.data;
+            if (!students || students.length === 0) {
+                global.$message.warning("该课程目前没有报名的学生");
+                return;
+            }
+
+            // 2. 数据转换：将原始对象列表转换为友好的导出格式
+            const exportData = students.map((item: any) => ({
+                '姓名': item.name,
+                '性别': item.sex === '0' ? '男' : '女',
+                '电话': item.phone,
+                '年龄': item.age,
+                '会员卡号': item.username,
+                '加入时间': item.joinTime,
+                '到期时间': item.endTime
+            }));
+
+            // 3. 生成并导出Excel
+            // 创建工作表
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            // 创建工作簿
+            const workbook = XLSX.utils.book_new();
+            // 将工作表添加到工作簿
+            XLSX.utils.book_append_sheet(workbook, worksheet, "学生名单");
+            // 生成Excel并触发下载
+            XLSX.writeFile(workbook, `${row.courseName}_报名学生名单.xlsx`);
+            
+            global.$message.success("导出成功！");
+        }
+    } catch (error) {
+        console.error("导出失败：", error);
+        global.$message.error("导出学生信息失败，请稍后重试");
+    }
 }
 </script>
 <style scoped></style>

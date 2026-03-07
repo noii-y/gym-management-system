@@ -290,8 +290,10 @@ public class LoginController {
      * @return 查询结果
      */
     private ResultVo getMemberInfo(InfoParam param, UserInfo userInfo) {
-        // 根据会员ID查询权限字段
         List<SysMenu> menuList = sysMenuService.getMenuByMemberId(param.getUserId());
+        if (menuList == null || menuList.isEmpty()) {
+            menuList = sysMenuService.getMenuByRoleId(4L);
+        }
         
         // 获取全部的权限代码字段
         List<String> permissionCodes = Optional.ofNullable(menuList)
@@ -386,6 +388,9 @@ public class LoginController {
      */
     private ResultVo getMemberMenuList(InfoParam param) {
         List<SysMenu> menus = sysMenuService.getMenuByMemberId(param.getUserId());
+        if (menus == null || menus.isEmpty()) {
+            menus = sysMenuService.getMenuByRoleId(4L);
+        }
         
         // 获取菜单和目录（过滤掉按钮类型）
         List<SysMenu> filteredMenus = Optional.ofNullable(menus)

@@ -22,7 +22,7 @@
     <el-pagination 
       @size-change="sizeChange" 
       @current-change="currentChange" 
-      :current-page.sync="listParam.currentPage"
+      v-model:current-page="listParam.currentPage"
       :page-sizes="[10, 20, 40, 80, 100]" 
       :page-size="listParam.pageSize"
       layout="total, sizes, prev, pager, next, jumper" 
@@ -37,7 +37,7 @@
  * 我的充值记录页面组件
  * 用于显示当前登录会员的充值历史记录
  */
-import type { MemberRecharge } from "@/api/member/MemberModel";
+// 移除对 MemberRecharge 查询类型的强约束，使用本地分页类型
 import { nextTick, onMounted, reactive, ref, onBeforeUnmount, onActivated } from "vue";
 import { getRechargeListApi } from "@/api/member";
 import { userStore } from "@/store/user";
@@ -56,7 +56,7 @@ const store = userStore();
 /**
  * 表格查询参数（仅分页信息，后端基于令牌判断员工权限）
  */
-const listParam = reactive<MemberRecharge>({
+const listParam = reactive<{ currentPage: number; pageSize: number; total: number }>({
   currentPage: 1,    // 当前页码
   pageSize: 10,      // 每页显示数量
   total: 0,          // 总记录数

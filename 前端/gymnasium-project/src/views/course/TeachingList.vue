@@ -18,7 +18,7 @@
     </el-table-column>
   </el-table>
   <el-pagination @size-change="sizeChange" @current-change="currentChange"
-    :current-page.sync="listParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
+    v-model:current-page="listParam.currentPage" :page-sizes="[10, 20, 40, 80, 100]"
     :page-size="listParam.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listParam.total"
     background />
 </template>

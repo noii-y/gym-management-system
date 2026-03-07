@@ -74,8 +74,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public SysUser loadUser(String username) {
+        String u = username == null ? null : username.trim();
+        if (u == null || u.isEmpty()) {
+            return null;
+        }
         QueryWrapper<SysUser> query = new QueryWrapper<>();
-        query.lambda().eq(SysUser::getUsername, username);
+        query.apply("lower(username)=lower({0})", u);
         return this.baseMapper.selectOne(query);
     }
 }

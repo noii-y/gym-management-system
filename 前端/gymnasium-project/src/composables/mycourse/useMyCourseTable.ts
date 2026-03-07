@@ -1,3 +1,7 @@
+/**
+ * 我的课程表格组合式函数
+ * 管理当前登录用户的课程列表，包含分页与高度计算
+ */
 import { ref, reactive, onMounted, nextTick, onBeforeUnmount, onActivated } from 'vue'
 import { getMyCourseListApi } from '@/api/course'
 import type { MyCourseListParam } from '@/api/course/CourseModel'
@@ -6,13 +10,13 @@ import { ElMessage } from 'element-plus'
 
 export default function useMyCourseTable(){
     const store = userStore()
-    //表格高度
+    /** 表格高度 */
     const tableHeight = ref(0)
-    //定义表格数据
+    /** 表格数据源 */
     const tableData = reactive({
         list:[]
     })
-    //列表查询参数
+    /** 查询参数（包含用户标识与分页信息） */
     const listParam = reactive<MyCourseListParam>({
         userId:'',
         userType:'',
@@ -21,7 +25,7 @@ export default function useMyCourseTable(){
         total:0
     })
 
-    //查询列表（等待用户信息就绪，失败重试一次）
+    /** 查询列表（等待用户信息就绪，失败重试一次） */
     const getList = async () =>{
         try {
             await waitForUserReady()
@@ -43,22 +47,24 @@ export default function useMyCourseTable(){
         }
     }
 
-    //页面容量改变时触发
+    /** 页面容量改变 */
     const sizeChange = (size:number)=>{
         listParam.pageSize = size
         getList()
     }
 
-    //页码改变时触发
+    /** 页码改变 */
     const currentChange = (page:number)=>{
         listParam.currentPage = page
         getList()
     }
 
+    /** 计算表格高度（适配窗口变化） */
     const calcHeight = () => {
         tableHeight.value = Math.max(300, window.innerHeight - 230)
     }
 
+    /** 等待用户信息可用（最多2秒） */
     const waitForUserReady = async () => {
         const start = Date.now()
         return new Promise<void>((resolve) => {

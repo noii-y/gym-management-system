@@ -111,6 +111,11 @@ public class MemberController {
             return ResultUtils.error("会员卡号被占用!");
         }
         
+        // 如果未指定角色，默认设置为普通会员（ID: 4）
+        if (member.getRoleId() == null) {
+            member.setRoleId(4L);
+        }
+        
         // 加密密码并保存
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberService.addMember(member);

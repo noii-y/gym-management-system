@@ -282,8 +282,12 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
      */
     @Override
     public Member loadUser(String username) {
+        String u = username == null ? null : username.trim();
+        if (u == null || u.isEmpty()) {
+            return null;
+        }
         QueryWrapper<Member> query = new QueryWrapper<>();
-        query.lambda().eq(Member::getUsername, username);
+        query.apply("lower(username)=lower({0})", u);
         return this.baseMapper.selectOne(query);
     }
 }

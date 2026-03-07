@@ -48,7 +48,7 @@
 
         <!-- 分页组件 -->
         <el-pagination background layout="total, sizes, prev, pager, next, jumper"
-            :current-page.sync="listParam.currentPage" :page-size="listParam.pageSize"
+            v-model:current-page="listParam.currentPage" :page-size="listParam.pageSize"
             :page-sizes="[10, 20, 40, 80, 100]" :total="listParam.total" @size-change="sizeChange"
             @current-change="currentChange" />
 

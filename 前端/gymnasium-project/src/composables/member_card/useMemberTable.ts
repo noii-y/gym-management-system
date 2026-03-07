@@ -43,7 +43,6 @@ export default function useMemberTable() {
     const getList = async () => {
         let res = await getListApi(listParam)
         if (res && res.code == 200) {
-            console.log(res)
             tableList.list = res.data.records
             listParam.total = res.data.total
         }

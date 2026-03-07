@@ -13,4 +13,17 @@
 
 <style lang="scss">
 /* 全局样式定义 */
+.auth-bg {
+  background-image: url("@/assets/WDU.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
 </style>

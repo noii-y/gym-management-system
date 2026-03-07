@@ -13,6 +13,8 @@ import com.noy.web.goods_order.entity.GoodsOrder;
 import com.noy.web.goods_order.entity.OrderItem;
 import com.noy.web.goods_order.entity.OrderParam;
 import com.noy.web.goods_order.service.GoodsOrderService;
+import com.noy.web.member.entity.Member;
+import com.noy.web.member.service.MemberService;
 import com.noy.web.sys_user.entity.SysUser;
 import com.noy.web.sys_user.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
@@ -59,12 +61,26 @@ public class GoodsOrderController {
     @Autowired
     private SysUserService sysUserService;
     @Autowired
+    private MemberService memberService;
+    @Autowired
     private GoodsService goodsService;
     //下单
     @PostMapping("/down")
     public ResultVo down(@RequestBody OrderParam Param){
+        String nickName = "";
         //查询用户信息
         SysUser user = sysUserService.getById(Param.getUserId());
+        if(user != null){
+            nickName = user.getNickName();
+        }else{
+            Member member = memberService.getById(Param.getUserId());
+            if(member != null){
+                nickName = member.getName();
+            }
+        }
+        if(StringUtils.isEmpty(nickName)){
+            return ResultUtils.error("用户不存在!");
+        }
         List<OrderItem> list = Param.getOrderList();
         List<GoodsOrder> orderList = new ArrayList<>();
         for(int i=0;i<list.size();i++){
@@ -82,7 +98,7 @@ public class GoodsOrderController {
             BigDecimal totalPrice = total.setScale(2,
                     BigDecimal.ROUND_HALF_UP);
             order.setTotalPrice(totalPrice);
-            order.setControlUser(user.getNickName());
+            order.setControlUser(nickName);
             orderList.add(order);
         }
         if(orderList.size() > 0){

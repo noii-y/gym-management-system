@@ -243,24 +243,10 @@ const addModel = reactive<GoodsType>({
 })
 
 /**
- * 商品价格自定义验证函数
- * @param _ 验证规则（未使用）
- * @param value 输入值
- * @param cb 回调函数
+ * 通用正数校验器工厂
  */
-const validatePrice = (_: any, value: any, cb: any) => {
-    if (!value || value <= 0) cb(new Error('请填写商品价格'))
-    else cb()
-}
-
-/**
- * 商品库存自定义验证函数
- * @param _ 验证规则（未使用）
- * @param value 输入值
- * @param cb 回调函数
- */
-const validateStore = (_: any, value: any, cb: any) => {
-    if (!value || value <= 0) cb(new Error('请填写商品库存'))
+const positiveValidator = (msg: string) => (_: any, value: any, cb: any) => {
+    if (!value || Number(value) <= 0) cb(new Error(msg))
     else cb()
 }
 
@@ -273,8 +259,8 @@ const rules = reactive({
     unit: [{ required: true, trigger: 'blur', message: '请填写单位' }],
     details: [{ required: true, trigger: 'blur', message: '请填写商品详情' }],
     specs: [{ required: true, trigger: 'blur', message: '请填写商品规格' }],
-    price: [{ required: true, validator: validatePrice, trigger: 'blur' }],
-    store: [{ required: true, validator: validateStore, trigger: 'blur' }],
+    price: [{ required: true, validator: positiveValidator('请填写商品价格'), trigger: 'blur' }],
+    store: [{ required: true, validator: positiveValidator('请填写商品库存'), trigger: 'blur' }],
 })
 
 /**
@@ -312,13 +298,6 @@ const commit = () => {
     })
 }
 </script>
-
-<style scoped>
-.w-full {
-    width: 100%;
-}
-</style>
-
 
 <style scoped>
 /* 让预览图片宽度自适应 */

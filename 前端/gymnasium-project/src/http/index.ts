@@ -39,7 +39,7 @@ export interface Result<T = any> {
  */
 // 注册模块暂未启用：保留类型以兼容现有 API 引用，但当前不使用
 export interface RequestOptions {
-  // noAuth?: boolean // 已移除：不再注入 X-No-Auth 头或特殊处理
+  noAuth?: boolean
 }
 
 /**
@@ -67,16 +67,14 @@ class Http {
     // ==================== 请求拦截器 ====================
     this.instance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        // 从用户store获取token
+        // 支持通过自定义请求头跳过鉴权
+        const skipAuth = !!(config.headers && (config.headers as any)['x-no-auth'])
         const store = userStore()
-        const token = store.getToken;
-        
-        // 统一在存在 token 时添加到请求头
-        if (token) {
+        const token = store.getToken
+        if (!skipAuth && token) {
           config.headers!['token'] = token
         }
-        
-        return config;
+        return config
       }, 
       (error: any) => {
         // 请求错误处理
@@ -196,8 +194,8 @@ class Http {
    * @returns Promise<T>
    */
   get<T = Result>(url: string, params?: object, options?: RequestOptions): Promise<T> {
-    // options 暂不使用
-    return this.instance.get(url, { params })
+    const headers: RawAxiosRequestHeaders | undefined = options?.noAuth ? { 'x-no-auth': '1' } : undefined
+    return this.instance.get(url, { params, headers })
   }
   
   /**
@@ -207,8 +205,8 @@ class Http {
    * @returns Promise<T>
    */
   post<T = Result>(url: string, data?: object, options?: RequestOptions): Promise<T> {
-    // options 暂不使用
-    return this.instance.post(url, data)
+    const headers: RawAxiosRequestHeaders | undefined = options?.noAuth ? { 'x-no-auth': '1' } : undefined
+    return this.instance.post(url, data, { headers })
   }
   
   /**
@@ -218,8 +216,8 @@ class Http {
    * @returns Promise<T>
    */
   put<T = Result>(url: string, data?: object, options?: RequestOptions): Promise<T> {
-    // options 暂不使用
-    return this.instance.put(url, data)
+    const headers: RawAxiosRequestHeaders | undefined = options?.noAuth ? { 'x-no-auth': '1' } : undefined
+    return this.instance.put(url, data, { headers })
   }
   
   /**
@@ -228,8 +226,8 @@ class Http {
    * @returns Promise<T>
    */
   delete<T = Result>(url: string, options?: RequestOptions): Promise<T> {
-    // options 暂不使用
-    return this.instance.delete(url)
+    const headers: RawAxiosRequestHeaders | undefined = options?.noAuth ? { 'x-no-auth': '1' } : undefined
+    return this.instance.delete(url, { headers })
   }
   
   /**
@@ -240,7 +238,8 @@ class Http {
    */
   upload<T = Result>(url: string, params?: object, options?: RequestOptions): Promise<T> {
     const headers: RawAxiosRequestHeaders = {
-      'Content-Type': 'multipart/form-data'
+      'Content-Type': 'multipart/form-data',
+      ...(options?.noAuth ? { 'x-no-auth': '1' } : {})
     }
     return this.instance.post(url, params, { headers })
   }

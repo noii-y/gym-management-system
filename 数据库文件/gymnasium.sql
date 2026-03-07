@@ -11,7 +11,7 @@
  Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 15/11/2025 16:20:17
+ Date: 28/02/2026 12:48:12
 */
 
 SET NAMES utf8mb4;
@@ -39,31 +39,11 @@ CREATE TABLE `course`  (
 INSERT INTO `course` VALUES (1, '篮球基础班', 'http://127.0.0.1:9000/gym/gym_1762433442603.jpg', '张明', 24, '<p>基础运球、投篮姿势与步伐训练。</p>', 399.00, 4);
 INSERT INTO `course` VALUES (2, '篮球进阶班', 'http://127.0.0.1:9000/gym/gym_1762433470383.jpg', '张明', 36, '<p>战术演练与对抗训练，提升比赛能力。</p>', 699.00, 4);
 INSERT INTO `course` VALUES (3, '足球技巧强化', 'http://127.0.0.1:9000/gym/gym_1762433479109.jpg', '王峰', 30, '<p>控球、传球与射门专项训练。</p>', 599.00, 6);
-INSERT INTO `course` VALUES (4, '羽毛球班', 'http://127.0.0.1:9000/gym/gym_1762433490929.jpg', '赵柳', 24, '<p>步伐、发接发与杀球技术提升。</p>', 499.00, 7);
+INSERT INTO `course` VALUES (4, '羽毛球班', 'http://127.0.0.1:9000/gym/gym_1762433490929.jpg', '张明', 24, '<p>步伐、发接发与杀球技术提升。</p>', 499.00, 4);
 INSERT INTO `course` VALUES (5, '网球入门', 'http://127.0.0.1:9000/gym/gym_1762433498450.jpg', '张明', 18, '<p>正反手击球、发球基础与规则讲解。</p>', 459.00, 4);
-INSERT INTO `course` VALUES (6, '力量训练基础', 'http://127.0.0.1:9000/gym/gym_1762433506814.jpg', '陈亮', 16, '<p>器械使用安全与基础增肌训练。</p>', 399.00, 8);
+INSERT INTO `course` VALUES (6, '力量训练基础', 'http://127.0.0.1:9000/gym/gym_1762433506814.jpg', '张明', 16, '<p>器械使用安全与基础增肌训练。</p>', 399.00, 4);
 INSERT INTO `course` VALUES (7, '有氧燃脂', 'http://127.0.0.1:9000/gym/gym_1762433519425.jpg', '周洁', 12, '<p>间歇有氧与心肺耐力提升课程。</p>', 299.00, 9);
 INSERT INTO `course` VALUES (8, '瑜伽舒展', 'http://127.0.0.1:9000/gym/gym_1762433530659.jpg', '林娜', 20, '<p>缓解压力与体态改善的基础序列。</p>', 359.00, 10);
-
--- ----------------------------
--- Table structure for course_copy1
--- ----------------------------
-DROP TABLE IF EXISTS `course_copy1`;
-CREATE TABLE `course_copy1`  (
-  `course_id` int NOT NULL AUTO_INCREMENT COMMENT '课程id',
-  `course_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '课程名称',
-  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '封面图',
-  `teacher_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '授课教师',
-  `course_hour` int NULL DEFAULT NULL COMMENT '课时',
-  `course_details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT '课程详情',
-  `course_price` decimal(18, 2) NULL DEFAULT NULL COMMENT '课程价格',
-  `teacher_id` int NULL DEFAULT NULL COMMENT '教师',
-  PRIMARY KEY (`course_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of course_copy1
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for goods
@@ -208,7 +188,7 @@ CREATE TABLE `member`  (
   `is_credentials_non_expired` tinyint NULL DEFAULT NULL COMMENT '密码是否过期(1 未过期，0已过期)',
   `is_enabled` tinyint NULL DEFAULT NULL COMMENT '帐户是否可用(1 可用，0 删除用户)',
   PRIMARY KEY (`member_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 256 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 257 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member
@@ -464,10 +444,11 @@ INSERT INTO `member` VALUES (248, '蔡梦瑶', '1', '18687110248', 22, '2003-02-
 INSERT INTO `member` VALUES (249, '古晓曼', '1', '18687110249', 21, '2004-03-03', 162, 50, 60, '2025-06-10', '2025-07-10', 'MBR0249', '$2a$10$myAOP14vKQVBF5EoX2QJPOpO1fU6mLOLZHIABGNz9KdmFPaG1zNKG', '1', 999.00, '1月卡', 30, 999.00, 1, 1, 1, 1);
 INSERT INTO `member` VALUES (250, '戴俊辰', '0', '18687110250', 23, '2002-04-04', 179, 74, 84, '2025-06-11', '2025-06-18', 'MBR0250', '$2a$10$0HVjw0UCs.eFOEti4TP4JurkdjO6pGaY65XNLDojEYX7DV/zQSVC.', '1', 500.00, '7天卡', 7, 500.00, 1, 1, 1, 1);
 INSERT INTO `member` VALUES (251, '包雨婷', '1', '18687110251', 22, '2003-05-05', 165, 52, 62, '2025-06-12', '2026-06-12', 'MBR0251', '$2a$10$h84zWzUeB9xFtUjA7Wn7T.RoIUzivRfdSHrIFtHk0cI1nL9JsP11O', '1', 20000.00, '年卡', 365, 20000.00, 1, 1, 1, 1);
-INSERT INTO `member` VALUES (252, '裴晓雪', '1', '18687110252', 21, '2004-06-06', 164, 51, 61, '2025-06-13', '2025-07-20', 'MBR0252', '$2a$10$KJZgpYFO/vgkZC0Syng5MuwckTE6xleJmCytFK4vjG7i303YG5GYe', '1', 1108.00, '7天卡', 7, 100.00, 1, 1, 1, 1);
+INSERT INTO `member` VALUES (252, '裴晓雪', '1', '18687110252', 21, '2004-06-06', 164, 51, 61, '2025-06-13', '2025-07-20', 'MBR0252', '$2a$10$ikIWkC9u5EQcBcGmZMH2ROa5tBJ7JrcbUNtT.YBbSY9b87eiJ.zGq', '1', 1108.00, '7天卡', 7, 100.00, 1, 1, 1, 1);
 INSERT INTO `member` VALUES (253, '1', '0', '1', 1, '2025-11-07', 112, 12, 1, '2025-11-08', '', '2003', '$2a$10$whvg8q3nBgmzZ4z0BFB2YujbMd9dmuIx6cRbbOCCtooSgyeZiH8H2', '1', 111.00, NULL, NULL, 0.00, 1, 1, 1, 1);
-INSERT INTO `member` VALUES (254, 'hy', '0', '1', 18, '2025-11-10', 172, 121, 45, '2025-11-10', '', '1', '$2a$10$FGKGzOuUyDuWMiqrqeYq5es/yvN40nVVQNDkjTvcqozOawJg0XQXy', '1', 11657746.00, NULL, NULL, 0.00, 1, 1, 1, 1);
-INSERT INTO `member` VALUES (255, '阿浅', '0', '17398208709', 22, '2003-10-11', 180, 175, NULL, '2025-11-10', '', '123456', '$2a$10$lT2XzXNX09RXwbBNSJj.9uaOfR/o3BVV.BLmeuto.ZWpc2WcfwJL2', '1', 1224124.00, NULL, NULL, 0.00, 1, 1, 1, 1);
+INSERT INTO `member` VALUES (254, 'hy', '0', '1', 18, '2025-11-10', 172, 121, 45, '2025-11-10', '2025-11-22', '123', '$2a$10$bUf44ePuvljjHpn2xlOfMeTMqFhzvNjh4y72dZxF66p18dG7WcvU2', '1', 11654433.00, '7天卡', 7, 100.00, 1, 1, 1, 1);
+INSERT INTO `member` VALUES (255, '阿浅', '0', '17398208709', 22, '2003-10-11', 180, 175, NULL, '2025-11-10', '2025-11-16', '123456', '$2a$10$lT2XzXNX09RXwbBNSJj.9uaOfR/o3BVV.BLmeuto.ZWpc2WcfwJL2', '1', 1223725.00, '1天体验卡', 1, 19.90, 1, 1, 1, 1);
+INSERT INTO `member` VALUES (256, '????', '0', '13800000001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'M27068', '$2a$10$eujxDXSYuHY8jOevLFqxRuYQwmKwS8i7mKCfC9o0Uv3oV3rs8UZ5S', '1', 0.00, NULL, NULL, 0.00, 1, 1, 1, 1);
 
 -- ----------------------------
 -- Table structure for member_apply
@@ -482,7 +463,7 @@ CREATE TABLE `member_apply`  (
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `create_user` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '创建人',
   PRIMARY KEY (`apply_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member_apply
@@ -504,6 +485,8 @@ INSERT INTO `member_apply` VALUES (14, 9, '1月卡', 30, 999.00, '2024-03-10 23:
 INSERT INTO `member_apply` VALUES (15, 9, '7天卡', 7, 500.00, '2024-03-10 23:54:05', NULL);
 INSERT INTO `member_apply` VALUES (16, 9, '7天卡', 7, 500.00, '2024-03-10 23:54:43', NULL);
 INSERT INTO `member_apply` VALUES (17, 252, '7天卡', 7, 100.00, '2025-11-07 09:59:52', NULL);
+INSERT INTO `member_apply` VALUES (18, 254, '7天卡', 7, 100.00, '2025-11-15 12:37:33', NULL);
+INSERT INTO `member_apply` VALUES (19, 255, '1天体验卡', 1, 19.90, '2025-11-15 12:37:39', NULL);
 
 -- ----------------------------
 -- Table structure for member_card
@@ -545,7 +528,7 @@ CREATE TABLE `member_course`  (
   `status` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '0:报名成功 1：退款',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`member_course_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member_course
@@ -557,6 +540,14 @@ INSERT INTO `member_course` VALUES (12, 6, '网球入门', 'http://127.0.0.1:900
 INSERT INTO `member_course` VALUES (16, 8, '有氧燃脂', 'http://127.0.0.1:9000/gym/gym_1762433519425.jpg', '李丽', 12, '<p>心肺耐力提升。</p>', 299.00, 5, 1, '0', '2024-03-10 10:48:32');
 INSERT INTO `member_course` VALUES (18, 4, '足球技巧强化', 'http://127.0.0.1:9000/gym/gym_1762433479109.jpg', '张明', 30, '<p>控球与射门训练。</p>', 599.00, 4, 9, '0', '2024-03-10 23:56:26');
 INSERT INTO `member_course` VALUES (21, 1, '篮球基础班', 'http://127.0.0.1:9000/gym/gym_1762433442603.jpg', '张明', 24, '<p>基础运球、投篮姿势与步伐训练。</p>', 399.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (22, 5, '网球入门', 'http://127.0.0.1:9000/gym/gym_1762433498450.jpg', '张明', 18, '<p>正反手击球、发球基础与规则讲解。</p>', 459.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (23, 2, '篮球进阶班', 'http://127.0.0.1:9000/gym/gym_1762433470383.jpg', '张明', 36, '<p>战术演练与对抗训练，提升比赛能力。</p>', 699.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (24, 3, '足球技巧强化', 'http://127.0.0.1:9000/gym/gym_1762433479109.jpg', '王峰', 30, '<p>控球、传球与射门专项训练。</p>', 599.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (25, 4, '羽毛球班', 'http://127.0.0.1:9000/gym/gym_1762433490929.jpg', '张明', 24, '<p>步伐、发接发与杀球技术提升。</p>', 499.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (26, 6, '力量训练基础', 'http://127.0.0.1:9000/gym/gym_1762433506814.jpg', '张明', 16, '<p>器械使用安全与基础增肌训练。</p>', 399.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (27, 7, '有氧燃脂', 'http://127.0.0.1:9000/gym/gym_1762433519425.jpg', '周洁', 12, '<p>间歇有氧与心肺耐力提升课程。</p>', 299.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (28, 8, '瑜伽舒展', 'http://127.0.0.1:9000/gym/gym_1762433530659.jpg', '林娜', 20, '<p>缓解压力与体态改善的基础序列。</p>', 359.00, NULL, 254, '0', NULL);
+INSERT INTO `member_course` VALUES (29, 1, '篮球基础班', 'http://127.0.0.1:9000/gym/gym_1762433442603.jpg', '张明', 24, '<p>基础运球、投篮姿势与步伐训练。</p>', 399.00, NULL, 255, '0', NULL);
 
 -- ----------------------------
 -- Table structure for member_recharge
@@ -606,7 +597,7 @@ CREATE TABLE `member_role`  (
   `member_id` int NULL DEFAULT NULL COMMENT '会员id',
   `role_id` int NULL DEFAULT NULL COMMENT '角色id',
   PRIMARY KEY (`member_role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member_role
@@ -620,8 +611,9 @@ INSERT INTO `member_role` VALUES (20, 7, 4);
 INSERT INTO `member_role` VALUES (21, 8, 4);
 INSERT INTO `member_role` VALUES (24, 9, 4);
 INSERT INTO `member_role` VALUES (25, 253, 4);
-INSERT INTO `member_role` VALUES (27, 254, 4);
 INSERT INTO `member_role` VALUES (28, 255, 4);
+INSERT INTO `member_role` VALUES (31, 254, NULL);
+INSERT INTO `member_role` VALUES (32, 256, NULL);
 
 -- ----------------------------
 -- Table structure for suggest
@@ -633,7 +625,7 @@ CREATE TABLE `suggest`  (
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT '反馈内容',
   `date_time` datetime NULL DEFAULT NULL COMMENT '反馈时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of suggest
@@ -664,6 +656,7 @@ INSERT INTO `suggest` VALUES (23, '跑步机屏幕太亮', '晚上跑的时候�
 INSERT INTO `suggest` VALUES (25, '希望有躺着健身的项目', '不想动但又想瘦，有没有这种课程？', '2025-07-22 21:33:44');
 INSERT INTO `suggest` VALUES (26, '健身房太安静', '没气氛，有人一起练就好了', '2025-07-23 18:26:51');
 INSERT INTO `suggest` VALUES (27, '沙袋太硬', '打两下手疼，能不能软一点，或者配手套。', '2025-07-23 20:02:35');
+INSERT INTO `suggest` VALUES (31, '课程评价 - 篮球基础班 ｜ 教练：张明', '评分：2（★★☆☆☆）\n评论：感觉教练没有阿浅帅\n课程ID：1', '2025-11-15 13:50:21');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -792,7 +785,7 @@ CREATE TABLE `sys_role_menu`  (
   `role_id` int NULL DEFAULT NULL COMMENT '角色id',
   `menu_id` int NULL DEFAULT NULL COMMENT '菜单id',
   PRIMARY KEY (`role_menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2775 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2893 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -819,45 +812,106 @@ INSERT INTO `sys_role_menu` VALUES (2706, 6, 42);
 INSERT INTO `sys_role_menu` VALUES (2707, 6, 51);
 INSERT INTO `sys_role_menu` VALUES (2708, 6, 46);
 INSERT INTO `sys_role_menu` VALUES (2709, 6, 52);
-INSERT INTO `sys_role_menu` VALUES (2726, 4, 66);
-INSERT INTO `sys_role_menu` VALUES (2727, 4, 4);
-INSERT INTO `sys_role_menu` VALUES (2728, 4, 31);
-INSERT INTO `sys_role_menu` VALUES (2729, 4, 26);
-INSERT INTO `sys_role_menu` VALUES (2730, 4, 41);
-INSERT INTO `sys_role_menu` VALUES (2731, 4, 36);
-INSERT INTO `sys_role_menu` VALUES (2732, 4, 42);
-INSERT INTO `sys_role_menu` VALUES (2733, 4, 51);
-INSERT INTO `sys_role_menu` VALUES (2734, 4, 46);
-INSERT INTO `sys_role_menu` VALUES (2735, 4, 52);
-INSERT INTO `sys_role_menu` VALUES (2736, 2, 5);
-INSERT INTO `sys_role_menu` VALUES (2737, 2, 4);
-INSERT INTO `sys_role_menu` VALUES (2738, 2, 6);
-INSERT INTO `sys_role_menu` VALUES (2739, 2, 7);
-INSERT INTO `sys_role_menu` VALUES (2740, 2, 27);
-INSERT INTO `sys_role_menu` VALUES (2741, 2, 26);
-INSERT INTO `sys_role_menu` VALUES (2742, 2, 64);
-INSERT INTO `sys_role_menu` VALUES (2743, 2, 32);
-INSERT INTO `sys_role_menu` VALUES (2744, 2, 37);
-INSERT INTO `sys_role_menu` VALUES (2745, 2, 36);
-INSERT INTO `sys_role_menu` VALUES (2746, 2, 41);
-INSERT INTO `sys_role_menu` VALUES (2747, 2, 42);
-INSERT INTO `sys_role_menu` VALUES (2748, 2, 51);
-INSERT INTO `sys_role_menu` VALUES (2749, 2, 46);
-INSERT INTO `sys_role_menu` VALUES (2750, 2, 52);
-INSERT INTO `sys_role_menu` VALUES (2761, 3, 27);
-INSERT INTO `sys_role_menu` VALUES (2762, 3, 26);
-INSERT INTO `sys_role_menu` VALUES (2763, 3, 64);
-INSERT INTO `sys_role_menu` VALUES (2764, 3, 67);
-INSERT INTO `sys_role_menu` VALUES (2765, 3, 41);
-INSERT INTO `sys_role_menu` VALUES (2766, 3, 36);
-INSERT INTO `sys_role_menu` VALUES (2767, 3, 42);
-INSERT INTO `sys_role_menu` VALUES (2768, 3, 51);
-INSERT INTO `sys_role_menu` VALUES (2769, 3, 46);
-INSERT INTO `sys_role_menu` VALUES (2770, 3, 52);
 INSERT INTO `sys_role_menu` VALUES (2771, 1, 2);
 INSERT INTO `sys_role_menu` VALUES (2772, 1, 1);
 INSERT INTO `sys_role_menu` VALUES (2773, 1, 3);
 INSERT INTO `sys_role_menu` VALUES (2774, 1, 17);
+INSERT INTO `sys_role_menu` VALUES (2775, 3, 27);
+INSERT INTO `sys_role_menu` VALUES (2776, 3, 26);
+INSERT INTO `sys_role_menu` VALUES (2777, 3, 28);
+INSERT INTO `sys_role_menu` VALUES (2778, 3, 29);
+INSERT INTO `sys_role_menu` VALUES (2779, 3, 30);
+INSERT INTO `sys_role_menu` VALUES (2780, 3, 53);
+INSERT INTO `sys_role_menu` VALUES (2781, 3, 54);
+INSERT INTO `sys_role_menu` VALUES (2782, 3, 64);
+INSERT INTO `sys_role_menu` VALUES (2783, 3, 65);
+INSERT INTO `sys_role_menu` VALUES (2784, 3, 67);
+INSERT INTO `sys_role_menu` VALUES (2785, 3, 68);
+INSERT INTO `sys_role_menu` VALUES (2786, 3, 69);
+INSERT INTO `sys_role_menu` VALUES (2787, 3, 70);
+INSERT INTO `sys_role_menu` VALUES (2788, 3, 41);
+INSERT INTO `sys_role_menu` VALUES (2789, 3, 36);
+INSERT INTO `sys_role_menu` VALUES (2790, 3, 61);
+INSERT INTO `sys_role_menu` VALUES (2791, 3, 42);
+INSERT INTO `sys_role_menu` VALUES (2792, 3, 51);
+INSERT INTO `sys_role_menu` VALUES (2793, 3, 43);
+INSERT INTO `sys_role_menu` VALUES (2794, 3, 44);
+INSERT INTO `sys_role_menu` VALUES (2795, 3, 45);
+INSERT INTO `sys_role_menu` VALUES (2796, 3, 50);
+INSERT INTO `sys_role_menu` VALUES (2797, 3, 55);
+INSERT INTO `sys_role_menu` VALUES (2798, 3, 46);
+INSERT INTO `sys_role_menu` VALUES (2799, 3, 52);
+INSERT INTO `sys_role_menu` VALUES (2800, 3, 47);
+INSERT INTO `sys_role_menu` VALUES (2801, 3, 48);
+INSERT INTO `sys_role_menu` VALUES (2802, 3, 49);
+INSERT INTO `sys_role_menu` VALUES (2803, 2, 5);
+INSERT INTO `sys_role_menu` VALUES (2804, 2, 4);
+INSERT INTO `sys_role_menu` VALUES (2805, 2, 14);
+INSERT INTO `sys_role_menu` VALUES (2806, 2, 15);
+INSERT INTO `sys_role_menu` VALUES (2807, 2, 16);
+INSERT INTO `sys_role_menu` VALUES (2808, 2, 6);
+INSERT INTO `sys_role_menu` VALUES (2809, 2, 21);
+INSERT INTO `sys_role_menu` VALUES (2810, 2, 22);
+INSERT INTO `sys_role_menu` VALUES (2811, 2, 23);
+INSERT INTO `sys_role_menu` VALUES (2812, 2, 24);
+INSERT INTO `sys_role_menu` VALUES (2813, 2, 25);
+INSERT INTO `sys_role_menu` VALUES (2814, 2, 57);
+INSERT INTO `sys_role_menu` VALUES (2815, 2, 60);
+INSERT INTO `sys_role_menu` VALUES (2816, 2, 7);
+INSERT INTO `sys_role_menu` VALUES (2817, 2, 27);
+INSERT INTO `sys_role_menu` VALUES (2818, 2, 26);
+INSERT INTO `sys_role_menu` VALUES (2819, 2, 28);
+INSERT INTO `sys_role_menu` VALUES (2820, 2, 29);
+INSERT INTO `sys_role_menu` VALUES (2821, 2, 30);
+INSERT INTO `sys_role_menu` VALUES (2822, 2, 53);
+INSERT INTO `sys_role_menu` VALUES (2823, 2, 54);
+INSERT INTO `sys_role_menu` VALUES (2824, 2, 64);
+INSERT INTO `sys_role_menu` VALUES (2825, 2, 65);
+INSERT INTO `sys_role_menu` VALUES (2826, 2, 32);
+INSERT INTO `sys_role_menu` VALUES (2827, 2, 33);
+INSERT INTO `sys_role_menu` VALUES (2828, 2, 34);
+INSERT INTO `sys_role_menu` VALUES (2829, 2, 35);
+INSERT INTO `sys_role_menu` VALUES (2830, 2, 37);
+INSERT INTO `sys_role_menu` VALUES (2831, 2, 36);
+INSERT INTO `sys_role_menu` VALUES (2832, 2, 38);
+INSERT INTO `sys_role_menu` VALUES (2833, 2, 39);
+INSERT INTO `sys_role_menu` VALUES (2834, 2, 40);
+INSERT INTO `sys_role_menu` VALUES (2835, 2, 41);
+INSERT INTO `sys_role_menu` VALUES (2836, 2, 61);
+INSERT INTO `sys_role_menu` VALUES (2837, 2, 42);
+INSERT INTO `sys_role_menu` VALUES (2838, 2, 51);
+INSERT INTO `sys_role_menu` VALUES (2839, 2, 43);
+INSERT INTO `sys_role_menu` VALUES (2840, 2, 44);
+INSERT INTO `sys_role_menu` VALUES (2841, 2, 45);
+INSERT INTO `sys_role_menu` VALUES (2842, 2, 50);
+INSERT INTO `sys_role_menu` VALUES (2843, 2, 55);
+INSERT INTO `sys_role_menu` VALUES (2844, 2, 46);
+INSERT INTO `sys_role_menu` VALUES (2845, 2, 52);
+INSERT INTO `sys_role_menu` VALUES (2846, 2, 47);
+INSERT INTO `sys_role_menu` VALUES (2847, 2, 48);
+INSERT INTO `sys_role_menu` VALUES (2848, 2, 49);
+INSERT INTO `sys_role_menu` VALUES (2871, 4, 66);
+INSERT INTO `sys_role_menu` VALUES (2872, 4, 4);
+INSERT INTO `sys_role_menu` VALUES (2873, 4, 31);
+INSERT INTO `sys_role_menu` VALUES (2874, 4, 26);
+INSERT INTO `sys_role_menu` VALUES (2875, 4, 58);
+INSERT INTO `sys_role_menu` VALUES (2876, 4, 62);
+INSERT INTO `sys_role_menu` VALUES (2877, 4, 63);
+INSERT INTO `sys_role_menu` VALUES (2878, 4, 41);
+INSERT INTO `sys_role_menu` VALUES (2879, 4, 36);
+INSERT INTO `sys_role_menu` VALUES (2880, 4, 61);
+INSERT INTO `sys_role_menu` VALUES (2881, 4, 42);
+INSERT INTO `sys_role_menu` VALUES (2882, 4, 51);
+INSERT INTO `sys_role_menu` VALUES (2883, 4, 43);
+INSERT INTO `sys_role_menu` VALUES (2884, 4, 44);
+INSERT INTO `sys_role_menu` VALUES (2885, 4, 45);
+INSERT INTO `sys_role_menu` VALUES (2886, 4, 50);
+INSERT INTO `sys_role_menu` VALUES (2887, 4, 55);
+INSERT INTO `sys_role_menu` VALUES (2888, 4, 46);
+INSERT INTO `sys_role_menu` VALUES (2889, 4, 52);
+INSERT INTO `sys_role_menu` VALUES (2890, 4, 47);
+INSERT INTO `sys_role_menu` VALUES (2891, 4, 48);
+INSERT INTO `sys_role_menu` VALUES (2892, 4, 49);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -872,6 +926,7 @@ CREATE TABLE `sys_user`  (
   `sex` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT ' 性别  0：男 1：女',
   `salary` decimal(18, 2) NULL DEFAULT NULL COMMENT '工资',
   `user_type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '类型（1：员工 2：教练）',
+  `coach_type` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '教练子类型：课程教练/助教',
   `status` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '状态 0：停用 1：启用',
   `is_admin` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT ' 是否是管理员 （1：是 0 ：否）',
   `is_account_non_expired` tinyint NULL DEFAULT NULL COMMENT '帐户是否过期(1 未过期，0已过期)',
@@ -881,17 +936,25 @@ CREATE TABLE `sys_user`  (
   `nick_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '姓名',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+  PRIMARY KEY (`user_id`) USING BTREE,
+  INDEX `idx_user_type_coach_type`(`user_type` ASC, `coach_type` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'zs001', '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme', '18687116223', '2383404558@qq.com', '0', 5000.00, '1', '1', '0', 1, 1, 1, 1, '张三', '2025-06-11 23:11:00', '2025-11-10 07:51:52');
-INSERT INTO `sys_user` VALUES (3, 'root', '$2a$10$bI7MkRirh36ZZ9dgRLAIwu9eefXDNMdbORHMvMCVUqohIYa4H/yKG', '17398208709', '2383404558@qq.com', '0', 1000000.00, '1', '1', '0', 1, 1, 1, 1, 'admin', NULL, '2025-09-26 07:21:26');
-INSERT INTO `sys_user` VALUES (6, 'admin', '$2a$10$fKInjm/5Cd/3/NGBiGggLeUG4RrE7oKGWt9qss658vGusO/m6ceGG', '18687116223', '', '0', 10000.00, '1', '1', '1', 1, 1, 1, 1, 'admin1', '2025-07-04 19:08:05', NULL);
-INSERT INTO `sys_user` VALUES (21, '123456', '$2a$10$jjNPbapkILwwMqvntfnhLO0Sa2Kg71git23.HuDmX051FemvJUOI2', '17398208709', '123', '0', NULL, '2', '1', '0', 1, 1, 1, 1, '阿浅', '2025-11-10 13:20:26', NULL);
-INSERT INTO `sys_user` VALUES (22, '1', '$2a$10$m.MUwvDVpPXVZpG3/3uCeOooQfw/.k.EeOd.0o/avMa.6DYKYypwa', '17398208709', '2803038543@qq,com', '0', 10000000.00, NULL, '1', '0', 1, 1, 1, 1, '阿浅', '2025-11-11 02:35:10', NULL);
+INSERT INTO `sys_user` VALUES (1, 'zs001', '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme', '18687116223', '2383404558@qq.com', '0', 5000.00, '1', NULL, '1', '0', 1, 1, 1, 1, '张三', '2025-06-11 23:11:00', '2025-11-10 07:51:52');
+INSERT INTO `sys_user` VALUES (3, 'root', '$2a$10$bI7MkRirh36ZZ9dgRLAIwu9eefXDNMdbORHMvMCVUqohIYa4H/yKG', '17398208709', '2383404558@qq.com', '0', 1000000.00, '1', NULL, '1', '0', 1, 1, 1, 1, 'admin', NULL, '2025-09-26 07:21:26');
+INSERT INTO `sys_user` VALUES (4, 'zhangming', '$2a$10$c5r3nlwJxPm7.cUgqAlXDeFQ8EuHNUKRosSZjq8HyddS2Ja5/k7bK', '12', '12', '0', 0.00, '2', '课程教练', '1', '0', 1, 1, 1, 1, '张明', '2025-11-15 16:33:13', '2025-11-15 12:00:20');
+INSERT INTO `sys_user` VALUES (6, 'admin', '$2a$10$fKInjm/5Cd/3/NGBiGggLeUG4RrE7oKGWt9qss658vGusO/m6ceGG', '18687116223', '', '0', 10000.00, '1', NULL, '1', '1', 1, 1, 1, 1, 'admin1', '2025-07-04 19:08:05', NULL);
+INSERT INTO `sys_user` VALUES (7, 'coach_7', '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme', '', '', '0', 0.00, '2', '课程教练', '1', '0', 1, 1, 1, 1, '赵柳', '2025-11-15 16:33:13', NULL);
+INSERT INTO `sys_user` VALUES (8, 'coach_8', '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme', '', '', '0', 0.00, '2', '课程教练', '1', '0', 1, 1, 1, 1, '陈亮', '2025-11-15 16:33:13', NULL);
+INSERT INTO `sys_user` VALUES (9, 'coach_9', '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme', '', '', '0', 0.00, '2', '课程教练', '1', '0', 1, 1, 1, 1, '周洁', '2025-11-15 16:33:13', NULL);
+INSERT INTO `sys_user` VALUES (10, 'coach_10', '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme', '', '', '0', 0.00, '2', '课程教练', '1', '0', 1, 1, 1, 1, '林娜', '2025-11-15 16:33:13', NULL);
+INSERT INTO `sys_user` VALUES (21, '123456', '$2a$10$jjNPbapkILwwMqvntfnhLO0Sa2Kg71git23.HuDmX051FemvJUOI2', '17398208709', '123', '0', NULL, '2', NULL, '1', '0', 1, 1, 1, 1, '阿浅', '2025-11-10 13:20:26', NULL);
+INSERT INTO `sys_user` VALUES (22, '1', '$2a$10$W0/1D1HGZQrmK22Hn33ideOgH7i2hyfxBglZHbsvTNnHv4r.DjrUe', '17398208709', '2803038543@qq,com', '0', 10000000.00, '1', NULL, '1', '0', 1, 1, 1, 1, '阿浅', '2025-11-11 02:35:10', '2025-11-15 14:10:22');
+INSERT INTO `sys_user` VALUES (23, 'U79983', '$2a$10$z2dgcbM.o2k1YNv1eh7H/uopC2E9D1lMQjhshGKfyiMG46Ky9N3Mq', '13800000002', NULL, '0', NULL, '1', NULL, '1', '0', 1, 1, 1, 1, '????', '2025-12-04 07:03:51', NULL);
+INSERT INTO `sys_user` VALUES (24, 'U11991', '$2a$10$pO7FTxNqY2zsZN05y4TNVu9bsc4ipUxLUz7Qyr62cjwojgBbjVxT.', '13800000003', NULL, '0', NULL, '1', NULL, '1', '0', 1, 1, 1, 1, '????', '2025-12-04 07:05:25', NULL);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -902,7 +965,7 @@ CREATE TABLE `sys_user_role`  (
   `user_id` int NULL DEFAULT NULL COMMENT '员工id',
   `role_id` int NULL DEFAULT NULL COMMENT '角色id',
   PRIMARY KEY (`user_role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_role
@@ -923,39 +986,10 @@ INSERT INTO `sys_user_role` VALUES (34, 19, 2);
 INSERT INTO `sys_user_role` VALUES (35, 20, 3);
 INSERT INTO `sys_user_role` VALUES (36, 21, 3);
 INSERT INTO `sys_user_role` VALUES (37, 22, 6);
+INSERT INTO `sys_user_role` VALUES (38, 7, 3);
+INSERT INTO `sys_user_role` VALUES (39, 8, 3);
+INSERT INTO `sys_user_role` VALUES (40, 9, 3);
+INSERT INTO `sys_user_role` VALUES (41, 10, 3);
+INSERT INTO `sys_user_role` VALUES (42, 24, 2);
 
 SET FOREIGN_KEY_CHECKS = 1;
-
--- ==== 教练子类型与课程教师同步改造 ====
--- 为 sys_user 增加教练子类型字段
-ALTER TABLE `sys_user`
-  ADD COLUMN `coach_type` varchar(16) NULL COMMENT '教练子类型：课程教练/助教' AFTER `user_type`;
-ALTER TABLE `sys_user` ADD INDEX `idx_user_type_coach_type` (`user_type`, `coach_type`);
-
--- 将课程列表中未在员工表出现的授课教师插入 sys_user（保持 user_id 与 course.teacher_id 一致），并标注为“课程教练”
-INSERT INTO `sys_user` (
-  `user_id`, `username`, `password`, `phone`, `email`, `sex`, `salary`,
-  `user_type`, `status`, `is_admin`, `is_account_non_expired`, `is_account_non_locked`,
-  `is_credentials_non_expired`, `is_enabled`, `nick_name`, `create_time`, `update_time`, `coach_type`
-)
-SELECT
-  c.`teacher_id` AS `user_id`,
-  CONCAT('coach_', c.`teacher_id`) AS `username`,
-  '$2a$10$W1Qe8xRjjgomW81Pc.DOY.1s.lAJb/Ash0yOOF77s7o7Db6q3Fwme' AS `password`,
-  '' AS `phone`, '' AS `email`, '0' AS `sex`, 0.00 AS `salary`,
-  '2' AS `user_type`, '1' AS `status`, '0' AS `is_admin`,
-  1 AS `is_account_non_expired`, 1 AS `is_account_non_locked`,
-  1 AS `is_credentials_non_expired`, 1 AS `is_enabled`,
-  c.`teacher_name` AS `nick_name`, NOW() AS `create_time`, NULL AS `update_time`,
-  '课程教练' AS `coach_type`
-FROM `course` c
-LEFT JOIN `sys_user` u ON u.`user_id` = c.`teacher_id`
-WHERE u.`user_id` IS NULL
-GROUP BY c.`teacher_id`, c.`teacher_name`;
-
--- 为所有教练用户补齐“教练”角色绑定（role_id = 3）
-INSERT INTO `sys_user_role` (`user_id`, `role_id`)
-SELECT u.`user_id`, 3
-FROM `sys_user` u
-LEFT JOIN `sys_user_role` ur ON ur.`user_id` = u.`user_id` AND ur.`role_id` = 3
-WHERE u.`user_type` = '2' AND ur.`user_id` IS NULL;

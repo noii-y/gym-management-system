@@ -35,7 +35,7 @@
 
         <!-- 分页组件 -->
         <el-pagination @size-change="orderSizeChange" @current-change="orderCurrentChange"
-            :current-page.sync="listParam.currentPage" :page-sizes="[20, 40, 80, 100]" :page-size="listParam.pageSize"
+            v-model:current-page="listParam.currentPage" :page-sizes="[20, 40, 80, 100]" :page-size="listParam.pageSize"
             layout="total, sizes, prev, pager, next, jumper" :total="listParam.total" background></el-pagination>
 
         <!-- 购物车抽屉 -->
@@ -85,7 +85,7 @@
                     
                     <!-- 商品列表分页 -->
                     <el-pagination @size-change="goodsSizeChange" @current-change="goodsCurrentChange"
-                        :current-page.sync="goodsParam.currentPage" :page-sizes="[20, 40, 80, 100]"
+                        v-model:current-page="goodsParam.currentPage" :page-sizes="[20, 40, 80, 100]"
                         :page-size="goodsParam.pageSize" layout="total, sizes, prev, pager, next, jumper"
                         :total="goodsParam.total" background></el-pagination>
                 </el-drawer>

@@ -120,7 +120,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page.sync="courseQuery.currentPage" :page-size="courseQuery.pageSize" :page-sizes="[10,20,40,80,100]" :total="courseQuery.total" @size-change="courseSizeChange" @current-change="coursePageChange" />
+            <el-pagination background layout="total, sizes, prev, pager, next, jumper" v-model:current-page="courseQuery.currentPage" :page-size="courseQuery.pageSize" :page-sizes="[10,20,40,80,100]" :total="courseQuery.total" @size-change="courseSizeChange" @current-change="coursePageChange" />
         </template>
     </SysDialog>
 </template>

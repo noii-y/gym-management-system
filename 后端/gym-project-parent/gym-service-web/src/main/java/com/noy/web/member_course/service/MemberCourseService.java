@@ -39,4 +39,14 @@ public interface MemberCourseService extends IService<MemberCourse> {
      * @param memberCourse 会员课程关联信息
      */
     void joinCourse(MemberCourse memberCourse);
+
+    /**
+     * 获取指定课程的所有已报名会员信息
+     * 
+     * <p>用于导出课程学生名单，返回报名的会员详细信息列表</p>
+     * 
+     * @param courseId 课程ID
+     * @return 报名的会员列表
+     */
+    java.util.List<com.noy.web.member.entity.Member> getMembersByCourseId(Long courseId);
 }

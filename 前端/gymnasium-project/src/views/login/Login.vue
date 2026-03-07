@@ -4,7 +4,7 @@
   包含账号、密码、验证码输入和用户类型选择
 -->
 <template>
-  <div class="logincontainer">
+  <div class="logincontainer auth-bg">
     <el-form 
       class="loginForm" 
       :model="loginModel" 
@@ -154,15 +154,16 @@ const onSubmit = async () => {
       // 保存token
       store.setToken(res.data.token);
       
-      // 设置用户信息
-      store.setUserInfo({
+      // 更新用户信息（允许部分字段缺失，登录后再补全）
+      store.updateUserInfo({
         userId: res.data.userId,
         username: res.data.username || loginModel.username,
         name: res.data.name || '',
         userType: res.data.userType || loginModel.userType.toString(),
         phone: res.data.phone || '',
         email: res.data.email || '',
-        avatar: res.data.avatar || ''
+        avatar: res.data.avatar || '',
+        sex: ''
       });
       const m = menuStore();
       try { localStorage.removeItem('menuStore') } catch (_) {}
@@ -199,13 +200,9 @@ const goReset = () => {
 <style scoped lang="scss">
 /* 登录容器样式 */
 .logincontainer {
-  background-color: #fff;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("../../assets/WDU.jpg");
-  background-size: 100% 100%;
 
   /* 登录表单样式 */
   .loginForm {
